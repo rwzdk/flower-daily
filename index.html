@@ -13,7 +13,7 @@
     <!-- ======== 报头 ======== -->
     <header class="masthead">
       <img class="bouquet" src="assets/flower-corner.jpg" alt="" />
-      <div class="stamp-corner">🌼</div>
+      <div class="stamp-corner"><span v-html="icon('daisy')"></span></div>
       <div class="meta-top"><span>FLOWER FIELD DAILY PRESS</span><span>vol.{{ issueNo }} · 每日刊</span></div>
       <h1>花海生活报</h1>
       <div class="sub">花 海 编 辑 部 · 每 日 出 版</div>
@@ -22,13 +22,13 @@
 
     <div class="dateline">
       <span>{{ cnDate }}</span>
-      <span>主笔：<b>{{ cfg.profile.name }}</b> {{ cfg.profile.avatar }} · 今日已付印 <b>{{ totalProgress }}%</b></span>
+      <span>主笔：<b>{{ cfg.profile.name }}</b> <span class="icn-inline" v-html="icon('daisy')"></span> · 今日已付印 <b>{{ totalProgress }}%</b></span>
     </div>
 
     <!-- ======== 版面导航 ======== -->
     <nav class="tabnav">
       <button v-for="m in cfg.modules" :key="m.id" class="tb" :class="{on:screen===m.id}" @click="go(m.id)">
-        <span class="e">{{ m.icon }}</span>{{ m.name }}
+        <span class="e" v-html="icon(m.icon)"></span>{{ m.name }}
       </button>
       <span class="tail">本报数据仅存于本机浏览器</span>
     </nav>
@@ -51,7 +51,7 @@
         <div v-for="m in cfg.modules.filter(x=>x.id!=='home')" :key="m.id" class="modcard" @click="go(m.id)">
           <span class="tape mini"></span>
           <div class="mc-head">
-            <span class="mc-ic">{{ m.icon }}</span>
+            <span class="mc-ic" v-html="icon(m.icon)"></span>
             <span><div class="mc-name">{{ m.name }}</div><div class="mc-en">{{ m.en }}</div></span>
           </div>
           <p class="mc-desc">{{ m.desc }}</p>
@@ -102,7 +102,7 @@
         <div class="col">
           <div class="pcard tilt-r">
             <span class="tape slant"></span>
-            <div class="stamp-pic">📮</div>
+            <div class="stamp-pic" v-html="icon('mail')"></div>
             <div class="sec-head"><h3>盖章处</h3><span class="en">POSTMARKS</span>
               <span class="tail"><span class="cnt">{{ checkDone }}/{{ checks.length }}</span><button class="add" @click="openEditor('checkin')">＋ 新增习惯</button></span>
             </div>

@@ -60,6 +60,18 @@ input,textarea,select{font-family:inherit;font-size:14px;color:var(--ink)}
 ::-webkit-scrollbar{width:8px;height:8px}
 ::-webkit-scrollbar-thumb{background:var(--line-strong);border-radius:8px}
 
+/* 手绘卡通图标尺寸 */
+.icn{width:20px;height:20px;display:block}
+.tabnav .tb .icn{width:17px;height:17px}
+.modcard .mc-ic .icn{width:21px;height:21px}
+.stamp-pic .icn{width:30px;height:30px}
+.stamp-corner .icn{width:30px;height:30px}
+.m-tabbar .tb .icn{width:21px;height:21px}
+.m-drawer .navi .icn{width:18px;height:18px}
+.m-drawer .ava .icn{width:26px;height:26px}
+.icn-inline{display:inline-flex;vertical-align:-4px}
+.icn-inline .icn{width:15px;height:15px}
+
 /* ============ 通用小件 ============ */
 .btn{
   display:inline-flex;align-items:center;gap:6px;justify-content:center;

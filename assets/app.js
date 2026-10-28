@@ -6,21 +6,21 @@ const CONFIG = {
   profile: { name: "阿棠", avatar: "🌼", subtitle: "花海编辑部 · 主笔" },
   storageKey: "flower-daily-v1",
   modules: [
-    { id: "home",  type: "dashboard", icon: "🏠", name: "头版",     en: "FRONT PAGE", desc: "今日总览与导览" },
-    { id: "todo",  type: "todo",      icon: "📌", name: "今日要务", en: "AGENDA",     desc: "当天计划，办完就划掉",
+    { id: "home",  type: "dashboard", icon: "home", name: "头版",     en: "FRONT PAGE", desc: "今日总览与导览" },
+    { id: "todo",  type: "todo",      icon: "pin", name: "今日要务", en: "AGENDA",     desc: "当天计划，办完就划掉",
       seed: [
         { text: "写花海专题开篇", level: "high", done: true },
         { text: "校对上周账目版面", level: "mid", done: true },
         { text: "给绿萝浇水并拍照存档", level: "mid", done: false },
         { text: "整理灵感剪报夹", level: "low", done: false }
       ] },
-    { id: "check", type: "checkin",   icon: "🌷", name: "盖章处",   en: "POSTMARKS",  desc: "习惯打卡，完成即盖戳",
+    { id: "check", type: "checkin",   icon: "bloom", name: "盖章处",   en: "POSTMARKS",  desc: "习惯打卡，完成即盖戳",
       seed: [
         { name: "晨跑 3km", emoji: "🏃", done: true,  streak: 12 },
         { name: "阅读 30 分钟", emoji: "📖", done: true,  streak: 8 },
         { name: "喝够 8 杯水", emoji: "💧", done: false, streak: 5 }
       ] },
-    { id: "money", type: "ledger",    icon: "🧾", name: "账房",     en: "LEDGER",     desc: "收支流水，心中有数",
+    { id: "money", type: "ledger",    icon: "receipt", name: "账房",     en: "LEDGER",     desc: "收支流水，心中有数",
       categories: ["餐饮", "购物", "交通", "花草", "居家", "娱乐", "稿费", "工资", "其他"],
       seed: [
         { kind: "expense", cat: "餐饮", amount: 28, note: "手冲咖啡", date: "today" },
@@ -28,13 +28,13 @@ const CONFIG = {
         { kind: "expense", cat: "餐饮", amount: 23, note: "午餐·牛肉面", date: "today" },
         { kind: "income",  cat: "稿费", amount: 500, note: "专栏稿费到账", date: "today" }
       ] },
-    { id: "goal",  type: "goal",      icon: "🌱", name: "长线连载", en: "SERIALS",    desc: "长期目标，每天 +1",
+    { id: "goal",  type: "goal",      icon: "sprout", name: "长线连载", en: "SERIALS",    desc: "长期目标，每天 +1",
       seed: [
         { name: "读完《植物图鉴》", emoji: "📚", current: 128, target: 240, unit: "页", note: "读到菊科了，很应季" },
         { name: "存下旅行基金", emoji: "✈️", current: 3200, target: 8000, unit: "元", note: "春天去看油菜花" },
         { name: "学会 30 道家常菜", emoji: "🍳", current: 17, target: 30, unit: "道", note: "" }
       ] },
-    { id: "note",  type: "notes",     icon: "✂️", name: "灵感剪报", en: "CLIPPINGS",  desc: "摘录、灵感与碎碎念",
+    { id: "note",  type: "notes",     icon: "scissors", name: "灵感剪报", en: "CLIPPINGS",  desc: "摘录、灵感与碎碎念",
       seed: [
         { title: "把日子过成连载", body: "每天一小块版面，坚持刊出，就是一部个人编年史。", tag: "写作", date: "today" },
         { title: "花海配色实验记录", body: "橘黄做标题、墨绿做骨架，米白留呼吸——像野花一样有秩序地生长。", tag: "设计", date: "today" },
@@ -77,6 +77,18 @@ const FIELDS = {
 };
 
 const CAT_EMOJI = { "餐饮": "🍜", "购物": "🛍️", "交通": "🚌", "花草": "🌷", "居家": "🏠", "娱乐": "🎈", "稿费": "✒️", "工资": "💰", "其他": "📦" };
+
+/* ---- 手绘卡通图标（墨线描边 + 橘黄墨绿填充，贴合手账花海风格） ---- */
+const ICONS = {
+  home: '<path d="M4.5 11.4 12 4.6l7.5 6.8"/><path d="M6.6 10.2v9.2h10.8v-9.2" fill="#fffdf6"/><rect x="10.1" y="13.6" width="3.8" height="5.8" rx="1.2" fill="#f09a33"/><circle cx="16.9" cy="7.2" r="1.2" fill="#f6c453"/>',
+  pin: '<path d="M9.2 3.6h5.6l-.9 5.5 2.9 2.6v1.8H7.2v-1.8l2.9-2.6z" fill="#f09a33"/><path d="M12 13.5v6.3"/><circle cx="12" cy="6.4" r="1.1" fill="#fffdf6"/>',
+  bloom: '<g fill="#fffdf6"><ellipse cx="12" cy="6.6" rx="2.2" ry="3.1"/><ellipse cx="17" cy="10.2" rx="2.2" ry="3.1" transform="rotate(72 17 10.2)"/><ellipse cx="15.2" cy="16.1" rx="2.2" ry="3.1" transform="rotate(144 15.2 16.1)"/><ellipse cx="8.8" cy="16.1" rx="2.2" ry="3.1" transform="rotate(216 8.8 16.1)"/><ellipse cx="7" cy="10.2" rx="2.2" ry="3.1" transform="rotate(288 7 10.2)"/></g><circle cx="12" cy="11.8" r="2.6" fill="#f6c453"/>',
+  receipt: '<path d="M6.5 3.6h11v16.8l-1.8-1.4-1.8 1.4-1.9-1.4-1.9 1.4-1.8-1.4-1.8 1.4z" fill="#fffdf6"/><path d="M9.2 8.2h5.6M9.2 11.6h5.6M9.2 15h3.6"/>',
+  sprout: '<path d="M6.6 13.4h10.8l-1.4 6.8H8z" fill="#f4a24a"/><path d="M12 13.4V9.2"/><path d="M12 9.2c0-3-2.4-4.6-5.4-4.4.2 3 2.2 4.6 5.4 4.4z" fill="#8cb874"/><path d="M12 9.9c0-2.6 2-4 4.8-3.9-.2 2.6-2 4-4.8 3.9z" fill="#5c8a4e"/>',
+  scissors: '<circle cx="6.9" cy="6.9" r="2.6" fill="#fffdf6"/><circle cx="6.9" cy="17.1" r="2.6" fill="#fffdf6"/><path d="M9.1 8.7 18.6 17M9.1 15.3 18.6 7"/>',
+  mail: '<rect x="4" y="6" width="16" height="12" rx="2.2" fill="#fffdf6"/><path d="m5.2 7.6 6.8 5.3 6.8-5.3"/>',
+  daisy: '<g fill="#fffdf6"><ellipse cx="12" cy="6.6" rx="2.2" ry="3.1"/><ellipse cx="17" cy="10.2" rx="2.2" ry="3.1" transform="rotate(72 17 10.2)"/><ellipse cx="15.2" cy="16.1" rx="2.2" ry="3.1" transform="rotate(144 15.2 16.1)"/><ellipse cx="8.8" cy="16.1" rx="2.2" ry="3.1" transform="rotate(216 8.8 16.1)"/><ellipse cx="7" cy="10.2" rx="2.2" ry="3.1" transform="rotate(288 7 10.2)"/></g><circle cx="12" cy="11.8" r="2.6" fill="#f6c453"/>'
+};
 
 /* ---- 工具 ---- */
 function dstr(d) { return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0"); }
@@ -219,6 +231,9 @@ function createWorkbenchApp() {
         setTimeout(() => { this.toasts = this.toasts.filter(x => x.id !== t.id); }, 2200);
       },
       catEmoji(cat) { return CAT_EMOJI[cat] || "📦"; },
+      icon(name) {
+        return `<svg class="icn" viewBox="0 0 24 24" fill="none" stroke="#6b573c" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">${ICONS[name] || ICONS.daisy}</svg>`;
+      },
       fmt(n) { return (Math.round(n * 100) / 100).toLocaleString("zh-CN"); },
       goalPct(g) { return Math.min(100, Math.round((g.current / (g.target || 1)) * 100)); },
 

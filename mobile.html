@@ -12,7 +12,7 @@
   <!-- ======== 顶栏（小报头） ======== -->
   <header class="m-topbar">
     <button class="menu" @click="drawer=true">☰</button>
-    <div class="brand">❀ 花海生活报</div>
+    <div class="brand" style="display:flex;align-items:center;justify-content:center;gap:6px"><span class="icn-inline" v-html="icon('daisy')"></span>花海生活报</div>
     <div class="dt">NO.{{ issueNo }} · {{ cnDate }}</div>
   </header>
 
@@ -34,7 +34,7 @@
         <div v-for="m in cfg.modules.filter(x=>x.id!=='home')" :key="m.id" class="modcard" @click="go(m.id)">
           <span class="tape mini"></span>
           <div class="mc-head">
-            <span class="mc-ic">{{ m.icon }}</span>
+            <span class="mc-ic" v-html="icon(m.icon)"></span>
             <span><div class="mc-name" style="font-size:13.5px">{{ m.name }}</div><div class="mc-en">{{ m.en }}</div></span>
           </div>
           <div class="mc-stat" style="font-size:15px" v-if="m.id==='todo'">{{ todoDone }}/{{ todos.length }}<span>完成</span></div>
@@ -69,7 +69,7 @@
     <section v-show="screen==='check'" class="m-sec">
       <div class="pcard">
         <span class="tape green slant"></span>
-        <div class="stamp-pic">📮</div>
+        <div class="stamp-pic" v-html="icon('mail')"></div>
         <div class="sec-head"><h3>盖章处</h3><span class="en">STAMPS</span>
           <span class="tail"><span class="cnt">{{ checkDone }}/{{ checks.length }}</span><button class="add" @click="openEditor('checkin')">＋</button></span>
         </div>
@@ -161,11 +161,11 @@
     <div class="m-drawer-mask" @click="drawer=false"></div>
     <aside class="m-drawer">
       <div class="who">
-        <span class="ava">{{ cfg.profile.avatar }}</span>
+        <span class="ava" v-html="icon('daisy')"></span>
         <span><b>{{ cfg.profile.name }}</b><p>{{ cfg.profile.subtitle }}</p></span>
       </div>
       <div v-for="m in cfg.modules" :key="m.id" class="navi" :class="{on:screen===m.id}" @click="go(m.id)">
-        <span class="e">{{ m.icon }}</span>{{ m.name }}<span style="margin-left:auto;font-size:9.5px;color:var(--ink-faint);letter-spacing:.1em">{{ m.en }}</span>
+        <span class="e" v-html="icon(m.icon)"></span>{{ m.name }}<span style="margin-left:auto;font-size:9.5px;color:var(--ink-faint);letter-spacing:.1em">{{ m.en }}</span>
       </div>
       <p style="font-size:10.5px;color:var(--ink-faint);margin-top:18px;line-height:1.7">本报数据仅保存在这台手机的浏览器里，清理浏览记录会丢失哦。</p>
     </aside>
@@ -174,7 +174,7 @@
   <!-- ======== 底栏 + 浮动加号 ======== -->
   <nav class="m-tabbar">
     <button v-for="id in cfg.tabbar" :key="id" class="tb" :class="{on:screen===id}" @click="go(id)">
-      <span class="e">{{ cfg.modules.find(m=>m.id===id).icon }}</span>
+      <span class="e" v-html="icon(cfg.modules.find(m=>m.id===id).icon)"></span>
       {{ cfg.modules.find(m=>m.id===id).name }}
     </button>
   </nav>
