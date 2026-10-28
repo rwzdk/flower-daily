@@ -323,6 +323,17 @@ input,textarea,select{font-family:inherit;font-size:14px;color:var(--ink)}
 .clip h4 .del{margin-left:6px}
 .clip.pinned{border-color:var(--orange);background:#fff8ea}
 
+/* 版头题花 */
+.sec-head .icn-inline{margin-right:8px;vertical-align:-3px}
+.sec-head .icn-inline .icn{width:18px;height:18px}
+
+/* 目标浇水花点 */
+.waterweek{display:flex;gap:5px;align-items:center;margin-top:7px}
+.wd{width:13px;height:13px;border-radius:50%;border:1.5px dashed var(--line-strong);background:var(--card-2)}
+.wd.ok{border-style:solid;border-color:var(--green);
+  background:radial-gradient(circle at 50% 40%,#fffdf6 22%,#f6c453 24%,#f09a33 68%)}
+.streak{font-size:11px;color:var(--green-deep);font-weight:700;margin-left:4px}
+
 /* ============ 编辑器弹窗 ============ */
 .mask{position:fixed;inset:0;background:rgba(90,70,48,.35);z-index:60;display:flex;align-items:center;justify-content:center;
   padding:20px;backdrop-filter:blur(2px)}

@@ -30,9 +30,9 @@ const CONFIG = {
       ] },
     { id: "goal",  type: "goal",      icon: "sprout", name: "长线连载", en: "SERIALS",    desc: "长期目标，每天 +1",
       seed: [
-        { name: "读完《植物图鉴》", emoji: "📚", current: 128, target: 240, unit: "页", note: "读到菊科了，很应季", lastStep: "" },
-        { name: "存下旅行基金", emoji: "✈️", current: 3200, target: 8000, unit: "元", note: "春天去看油菜花", lastStep: "" },
-        { name: "学会 30 道家常菜", emoji: "🍳", current: 17, target: 30, unit: "道", note: "", lastStep: "" }
+        { name: "读完《植物图鉴》", emoji: "📚", current: 128, target: 240, unit: "页", note: "读到菊科了，很应季", lastStep: "", waterLog: [] },
+        { name: "存下旅行基金", emoji: "✈️", current: 3200, target: 8000, unit: "元", note: "春天去看油菜花", lastStep: "", waterLog: [] },
+        { name: "学会 30 道家常菜", emoji: "🍳", current: 17, target: 30, unit: "道", note: "", lastStep: "", waterLog: [] }
       ] },
     { id: "note",  type: "notes",     icon: "scissors", name: "灵感剪报", en: "CLIPPINGS",  desc: "摘录、灵感与碎碎念",
       seed: [
@@ -216,6 +216,9 @@ function createWorkbenchApp() {
       dailyQuote() {
         return this.quotes[(+this.issueNo) % this.quotes.length];
       },
+      last7() {
+        return Array.from({ length: 7 }, (_, i) => { const d = new Date(); d.setDate(d.getDate() - (6 - i)); return todayStr(d); });
+      },
       totalProgress() {
         const parts = [];
         if (this.todos.length) parts.push(this.todoDone / this.todos.length);
@@ -292,7 +295,7 @@ function createWorkbenchApp() {
           const it = Object.assign({ id: uid() }, form);
           if (type === "todo") it.done = false;
           if (type === "checkin") { it.done = false; it.streak = 0; it.lastDone = ""; if (!it.emoji) it.emoji = "🌱"; }
-          if (type === "goal") { it.current = +it.current || 0; it.target = +it.target; if (!it.emoji) it.emoji = "🌱"; it.lastStep = ""; }
+          if (type === "goal") { it.current = +it.current || 0; it.target = +it.target; if (!it.emoji) it.emoji = "🌱"; it.lastStep = ""; it.waterLog = []; }
           if (type === "ledger") { it.amount = +it.amount; if (!it.date) it.date = this.today; }
           if (type === "notes") it.date = this.today;
           list.unshift(it);
@@ -320,9 +323,18 @@ function createWorkbenchApp() {
         if (g.current < g.target) {
           g.current = (+g.current || 0) + 1;
           g.lastStep = this.today;
+          if (!g.waterLog) g.waterLog = [];
+          if (!g.waterLog.includes(this.today)) g.waterLog.push(this.today);
           if (g.current >= g.target) this.toast("🎉 目标达成，加印喜报！");
           else this.toast("浇水成功，藤蔓 +1 🌿");
         }
+      },
+      goalStreak(g) {
+        const log = g.waterLog || [];
+        let n = 0; const d = new Date();
+        if (!log.includes(todayStr(d))) d.setDate(d.getDate() - 1);
+        while (log.includes(todayStr(d))) { n++; d.setDate(d.getDate() - 1); }
+        return n;
       },
       pinNote(x) { x.pinned = !x.pinned; },
       quickAdd() {

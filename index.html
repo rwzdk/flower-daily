@@ -73,7 +73,7 @@
         <div class="col">
           <div class="pcard tilt-l">
             <span class="tape"></span>
-            <div class="sec-head"><h3>今日要务</h3><span class="en">AGENDA</span>
+            <div class="sec-head"><span class="icn-inline" v-html="icon('daisy')"></span><h3>今日要务</h3><span class="en">AGENDA</span>
               <span class="tail"><span class="cnt">{{ todoDone }}/{{ todos.length }}</span><button class="add" @click="openEditor('todo')">＋ 刊登</button></span>
             </div>
             <div v-if="!todos.length" class="empty"><span class="e">📌</span>今日版面空空，刊登一条要务吧</div>
@@ -88,7 +88,7 @@
         <div class="col">
           <div class="pcard tilt-r">
             <span class="tape green slant"></span>
-            <div class="sec-head"><h3>编辑手记</h3><span class="en">NOTES</span></div>
+            <div class="sec-head"><span class="icn-inline" v-html="icon('daisy')"></span><h3>编辑手记</h3><span class="en">NOTES</span></div>
             <p style="font-size:13px;color:var(--ink-soft)">先把最难的那条放在头版头条，完成它，今天的报纸就算办成了。</p>
             <div style="margin-top:14px"><span class="pencil">✎ 点击事项即可划掉，划掉的声音很治愈</span></div>
           </div>
@@ -103,7 +103,7 @@
           <div class="pcard tilt-r">
             <span class="tape slant"></span>
             <div class="stamp-pic" v-html="icon('mail')"></div>
-            <div class="sec-head"><h3>盖章处</h3><span class="en">POSTMARKS</span>
+            <div class="sec-head" style="padding-right:66px"><span class="icn-inline" v-html="icon('daisy')"></span><h3>盖章处</h3><span class="en">POSTMARKS</span>
               <span class="tail"><span class="cnt">{{ checkDone }}/{{ checks.length }}</span><button class="add" @click="openEditor('checkin')">＋ 新增习惯</button></span>
             </div>
             <div v-if="!checks.length" class="empty"><span class="e">🌷</span>还没有习惯，种下第一颗种子吧</div>
@@ -121,7 +121,7 @@
         <div class="col">
           <div class="pcard tilt-l">
             <span class="tape green"></span>
-            <div class="sec-head"><h3>连击榜</h3><span class="en">STREAKS</span></div>
+            <div class="sec-head"><span class="icn-inline" v-html="icon('daisy')"></span><h3>连击榜</h3><span class="en">STREAKS</span></div>
             <div v-for="x in checks.slice().sort((a,b)=>b.streak-a.streak)" :key="x.id"
                  style="display:flex;justify-content:space-between;font-size:13px;padding:8px 2px;border-bottom:1px dotted var(--line-strong)">
               <span>{{ x.emoji }} {{ x.name }}</span>
@@ -138,7 +138,7 @@
         <div class="col">
           <div class="pcard tilt-l">
             <span class="tape"></span>
-            <div class="sec-head"><h3>账房流水</h3><span class="en">LEDGER</span>
+            <div class="sec-head"><span class="icn-inline" v-html="icon('daisy')"></span><h3>账房流水</h3><span class="en">LEDGER</span>
               <span class="tail"><button class="add" @click="openEditor('ledger')">＋ 记一笔</button></span>
             </div>
             <div v-if="!bills.length" class="empty"><span class="e">🧾</span>账本是空的，记一笔今天的第一笔吧</div>
@@ -157,7 +157,7 @@
         <div class="col">
           <div class="pcard tilt-r">
             <span class="tape green slant"></span>
-            <div class="sec-head"><h3>支出构成</h3><span class="en">ANALYSIS</span></div>
+            <div class="sec-head"><span class="icn-inline" v-html="icon('daisy')"></span><h3>支出构成</h3><span class="en">ANALYSIS</span></div>
             <div v-if="!catBars.length" class="empty"><span class="e">📊</span>本月还没有支出</div>
             <div v-for="c in catBars" :key="c.cat" class="cbar">
               <span class="lb">{{ catEmoji(c.cat) }} {{ c.cat }}</span>
@@ -176,7 +176,7 @@
         <div class="col">
           <div class="pcard tilt-r">
             <span class="tape green"></span>
-            <div class="sec-head"><h3>长线连载</h3><span class="en">SERIALS</span>
+            <div class="sec-head"><span class="icn-inline" v-html="icon('daisy')"></span><h3>长线连载</h3><span class="en">SERIALS</span>
               <span class="tail"><span class="cnt">平均 {{ goalAvg }}%</span><button class="add" @click="openEditor('goal')">＋ 种一棵</button></span>
             </div>
             <div v-if="!goals.length" class="empty"><span class="e">🌱</span>还没有长期目标，种一棵慢慢养吧</div>
@@ -193,6 +193,11 @@
                 </span>
                 <button class="step" @click="stepGoal(g)" title="浇水 +1">＋1</button>
               </div>
+              <div class="waterweek">
+                <span v-for="d in last7" :key="d" class="wd" :class="{ok:g.waterLog && g.waterLog.includes(d)}"></span>
+                <span class="streak" v-if="goalStreak(g)>0">🔥 连浇 {{ goalStreak(g) }} 天</span>
+                <span v-else style="font-size:10px;color:var(--ink-faint)">近 7 天浇水记录</span>
+              </div>
               <div class="eta" v-if="g.current<g.target">按每天 ＋1，约 <b>{{ g.target-g.current }}</b> 天后收成<span v-if="g.note"> · ✎ {{ g.note }}</span></div>
               <div class="eta" v-else><b>🎉 已收成，加印喜报！</b><span v-if="g.note"> · ✎ {{ g.note }}</span></div>
             </div>
@@ -201,7 +206,7 @@
         <div class="col">
           <div class="pcard tilt-l">
             <span class="tape slant"></span>
-            <div class="sec-head"><h3>编辑部寄语</h3><span class="en">WORDS</span></div>
+            <div class="sec-head"><span class="icn-inline" v-html="icon('daisy')"></span><h3>编辑部寄语</h3><span class="en">WORDS</span></div>
             <p style="font-size:13px;color:var(--ink-soft)">每个长期目标都是一棵花：点「＋1」浇一次水，藤蔓爬过 25% / 50% / 75% 会各开一朵里程碑小花，浇满就收成。</p>
             <div style="margin-top:14px"><span class="pencil">✎ 今天浇过水的会挂上「已浇水」牌</span></div>
           </div>
@@ -213,7 +218,7 @@
     <section v-show="screen==='note'">
       <div class="pcard tilt-l">
         <span class="tape"></span>
-        <div class="sec-head"><h3>灵感剪报夹</h3><span class="en">CLIPPINGS</span>
+        <div class="sec-head"><span class="icn-inline" v-html="icon('daisy')"></span><h3>灵感剪报夹</h3><span class="en">CLIPPINGS</span>
           <span class="tail"><span class="cnt">{{ filteredNotes.length }} / {{ notes.length }} 则</span><button class="add" @click="openEditor('notes')">＋ 剪一则</button></span>
         </div>
         <div class="tagrow" v-if="noteTags.length">
@@ -224,7 +229,7 @@
         <div class="cols c3">
           <div class="col" v-for="(colItems,ci) in [filteredNotes.filter((_,i)=>i%3===0),filteredNotes.filter((_,i)=>i%3===1),filteredNotes.filter((_,i)=>i%3===2)]" :key="ci">
             <div v-for="x in colItems" :key="x.id" class="clip" :class="{pinned:x.pinned}">
-              <h4>{{ x.title }}<button class="pin" :class="{on:x.pinned}" @click="pinNote(x)">{{ x.pinned?'已置顶':'置顶' }}</button><button class="del" @click="del('note',x.id)">撤下</button></h4>
+              <h4>{{ x.title }}<button class="pin" @click="openEditor('notes', x)">修改</button><button class="pin" :class="{on:x.pinned}" @click="pinNote(x)">{{ x.pinned?'已置顶':'置顶' }}</button><button class="del" @click="del('note',x.id)">撤下</button></h4>
               <p>{{ x.body }}</p>
               <div class="meta"><span v-if="x.tag"># {{ x.tag }}</span><span class="dt">{{ x.date }}</span></div>
             </div>
