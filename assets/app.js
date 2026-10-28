@@ -219,6 +219,10 @@ function createWorkbenchApp() {
       last7() {
         return Array.from({ length: 7 }, (_, i) => { const d = new Date(); d.setDate(d.getDate() - (6 - i)); return todayStr(d); });
       },
+      archivePick() {
+        if (!this.notes.length) return null;
+        return this.notes[(+this.issueNo) % this.notes.length];
+      },
       totalProgress() {
         const parts = [];
         if (this.todos.length) parts.push(this.todoDone / this.todos.length);
@@ -325,6 +329,7 @@ function createWorkbenchApp() {
           g.lastStep = this.today;
           if (!g.waterLog) g.waterLog = [];
           if (!g.waterLog.includes(this.today)) g.waterLog.push(this.today);
+          g._w = true; setTimeout(() => { g._w = false; }, 950);
           if (g.current >= g.target) this.toast("🎉 目标达成，加印喜报！");
           else this.toast("浇水成功，藤蔓 +1 🌿");
         }
@@ -335,6 +340,33 @@ function createWorkbenchApp() {
         if (!log.includes(todayStr(d))) d.setDate(d.getDate() - 1);
         while (log.includes(todayStr(d))) { n++; d.setDate(d.getDate() - 1); }
         return n;
+      },
+      /* 目标养成花：按进度分 5 个生长阶段，浇水时落水滴 */
+      flowerSvg(g) {
+        const pct = this.goalPct(g);
+        const st = pct >= 100 ? 4 : pct >= 75 ? 3 : pct >= 50 ? 2 : pct >= 25 ? 1 : 0;
+        const I = `stroke="#6b573c" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"`;
+        const GR = `stroke="#5c8a4e" stroke-width="2.4" stroke-linecap="round" fill="none"`;
+        let plant = "";
+        if (st === 0) {
+          plant = `<ellipse cx="24" cy="48.5" rx="3.8" ry="2.6" fill="#a98a63" ${I}/>`;
+        } else if (st === 1) {
+          plant = `<path d="M24 49 V38" ${GR}/><path d="M24 44c-4 .4-6-1.4-6.6-4.6 3.4-.4 5.8 1.2 6.6 4.6z" fill="#8cb874" ${I}/><path d="M24 40c3.6.4 5.6-1.2 6.2-4.2-3.2-.4-5.4 1-6.2 4.2z" fill="#5c8a4e" ${I}/>`;
+        } else if (st === 2) {
+          plant = `<path d="M24 49 V31" ${GR}/><path d="M24 42c-4.2.4-6.2-1.4-6.8-4.8 3.6-.4 6 1.2 6.8 4.8z" fill="#8cb874" ${I}/><path d="M24 37c4 .4 6-1.2 6.6-4.6-3.4-.4-5.8 1.2-6.6 4.6z" fill="#5c8a4e" ${I}/><ellipse cx="24" cy="25.5" rx="4.6" ry="6.2" fill="#f4a24a" ${I}/><path d="M24 20c1.6 2.2 1.6 4.4 0 6.6" fill="none" stroke="#c06a14" stroke-width="1.2"/>`;
+        } else {
+          const big = st === 4, cx = 24, cy = big ? 22 : 24, R = big ? 4 : 3, pr = big ? 3.4 : 2.7, pl = big ? 4.8 : 4;
+          let petals = "";
+          for (let k = 0; k < (big ? 6 : 5); k++) {
+            const a = k * (360 / (big ? 6 : 5));
+            const px = cx + R * 2 * Math.sin(a * Math.PI / 180), py = cy - R * 2 * Math.cos(a * Math.PI / 180);
+            petals += `<ellipse cx="${px.toFixed(1)}" cy="${py.toFixed(1)}" rx="${pr}" ry="${pl}" fill="#fffdf6" ${I} transform="rotate(${a} ${px.toFixed(1)} ${py.toFixed(1)})"/>`;
+          }
+          plant = `<path d="M24 49 V${cy + 7}" ${GR}/><path d="M24 42c-4.2.4-6.2-1.4-6.8-4.8 3.6-.4 6 1.2 6.8 4.8z" fill="#8cb874" ${I}/><path d="M24 37c4 .4 6-1.2 6.6-4.6-3.4-.4-5.8 1.2-6.6 4.6z" fill="#5c8a4e" ${I}/>${petals}<circle cx="${cx}" cy="${cy}" r="${R}" fill="#f6c453" ${I}/>`
+            + (big ? `<path d="M9 12l1.6 3.2L14 16.8l-3.4 1.6L9 21.6 7.4 18.4 4 16.8l3.4-1.6z" fill="#f6c453"/><path d="M38 8l1.2 2.4 2.4 1.2-2.4 1.2L38 15.2l-1.2-2.4-2.4-1.2 2.4-1.2z" fill="#f09a33"/>` : "");
+        }
+        const drops = g._w ? `<g class="wdrop" fill="#8ec9e8"><circle cx="18" cy="6" r="2.2"/><circle cx="26" cy="2" r="2.4"/><circle cx="31" cy="8" r="1.9"/></g>` : "";
+        return `<svg viewBox="0 0 48 66" class="fplant">${drops}${plant}<rect x="12" y="49" width="24" height="5" rx="2.2" fill="#f09a33" ${I}/><path d="M14.5 54h19l-2.6 10H17.1z" fill="#f4a24a" ${I}/></svg>`;
       },
       pinNote(x) { x.pinned = !x.pinned; },
       quickAdd() {

@@ -294,6 +294,13 @@ input,textarea,select{font-family:inherit;font-size:14px;color:var(--ink)}
 .clip .meta{display:flex;gap:8px;margin-top:7px;font-size:10px;color:var(--orange-deep);letter-spacing:.08em}
 .clip .meta .dt{color:var(--ink-faint);margin-left:auto}
 
+body::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;
+  background-image:radial-gradient(rgba(107,87,60,.055) 1px, transparent 1.5px);background-size:22px 22px}
+/* 页面角落花丛 */
+.flower-corner{position:fixed;pointer-events:none;z-index:0;mix-blend-mode:multiply}
+.fc-tl{top:-6px;left:-26px;width:170px;transform:rotate(160deg);opacity:.4}
+.fc-br{bottom:-10px;right:-30px;width:230px;transform:rotate(-8deg);opacity:.45}
+
 /* 每日一句 */
 .daily-quote{text-align:center;font-family:var(--serif);font-size:16px;font-weight:700;color:var(--ink-soft);padding:20px 20px 6px}
 .daily-quote .qm{color:var(--orange);font-size:24px;margin:0 8px;line-height:0;vertical-align:-6px}
@@ -333,6 +340,29 @@ input,textarea,select{font-family:inherit;font-size:14px;color:var(--ink)}
 .wd.ok{border-style:solid;border-color:var(--green);
   background:radial-gradient(circle at 50% 40%,#fffdf6 22%,#f6c453 24%,#f09a33 68%)}
 .streak{font-size:11px;color:var(--green-deep);font-weight:700;margin-left:4px}
+
+/* 目标养成花 */
+.goal-row{display:flex;gap:13px;align-items:flex-start}
+.goal-row .pot{flex:none;width:54px;padding-top:2px}
+.goal-row .goal-main{flex:1;min-width:0}
+.fplant{width:54px;height:70px;overflow:visible;animation:sway 4.5s ease-in-out infinite;transform-origin:50% 100%}
+@keyframes sway{0%,100%{transform:rotate(-2.4deg)}50%{transform:rotate(2.4deg)}}
+.wdrop circle{animation:drop .85s ease-in forwards}
+.wdrop circle:nth-child(2){animation-delay:.14s}
+.wdrop circle:nth-child(3){animation-delay:.28s}
+@keyframes drop{to{transform:translateY(40px);opacity:0}}
+
+/* 本报宣言（三栏） */
+.values{display:grid;grid-template-columns:repeat(3,1fr);margin-top:16px;border:1.5px solid var(--line-strong);
+  border-radius:var(--r-card);background:var(--card);overflow:hidden;box-shadow:var(--shadow-card)}
+.values .v{padding:14px 18px;font-size:12px;color:var(--ink-soft);line-height:1.7}
+.values .v+.v{border-left:1.5px dashed var(--line-strong)}
+.values b{display:block;font-family:var(--serif);font-size:13px;color:var(--green-deep);margin-bottom:3px;letter-spacing:.12em}
+
+/* 旧稿重读 */
+.archive-q{font-family:var(--serif);font-size:14.5px;line-height:1.85;color:var(--ink)}
+.archive-q .qt{color:var(--orange);font-size:20px;margin-right:4px}
+.archive-meta{margin-top:8px;font-size:10.5px;color:var(--ink-faint);display:flex;gap:10px}
 
 /* ============ 编辑器弹窗 ============ */
 .mask{position:fixed;inset:0;background:rgba(90,70,48,.35);z-index:60;display:flex;align-items:center;justify-content:center;
@@ -425,6 +455,10 @@ input,textarea,select{font-family:inherit;font-size:14px;color:var(--ink)}
   .mask{align-items:flex-end;padding:0}
   .editor{width:100%;border-radius:var(--r-sheet) var(--r-sheet) 0 0;max-height:88vh;padding-bottom:calc(20px + env(safe-area-inset-bottom))}
   .m-body .modgrid{grid-template-columns:1fr 1fr}
+  .values{grid-template-columns:1fr}
+  .values .v+.v{border-left:none;border-top:1.5px dashed var(--line-strong)}
+  .fc-tl{width:110px}
+  .fc-br{width:150px}
 }
 
 /* 桌面/手机通用微调 */

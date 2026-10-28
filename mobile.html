@@ -8,6 +8,8 @@
 </head>
 <body class="m-body" style="background:var(--paper)">
 <div id="app">
+  <img class="flower-corner fc-tl" src="assets/flower-corner.jpg" alt="" />
+  <img class="flower-corner fc-br" src="assets/flower-corner.jpg" alt="" />
 
   <!-- ======== 顶栏（小报头） ======== -->
   <header class="m-topbar">
@@ -46,6 +48,11 @@
         </div>
       </div>
       <div class="daily-quote" style="font-size:14px;padding-top:14px"><span class="qm">❝</span>{{ dailyQuote }}<span class="qm">❞</span></div>
+      <div class="values" style="font-size:11.5px">
+        <div class="v"><b>为谁而办</b>想把日子过好的普通人——只要一张每天付印的小报，不需要复杂系统。</div>
+        <div class="v"><b>解决什么</b>计划散、坚持难、账目糊、目标远、灵感易丢。</div>
+        <div class="v"><b>本报怎么办</b>要事勾掉、习惯盖章、收支入账、目标浇水、灵感剪贴——全在本地。</div>
+      </div>
     </section>
 
     <!-- ======== 今日要务 ======== -->
@@ -124,31 +131,42 @@
         </div>
         <div v-if="!goals.length" class="empty"><span class="e">🌱</span>种一棵长期目标慢慢养</div>
         <div v-for="g in goals" :key="g.id" class="goal">
-          <div class="gt">
-            <span><span class="em">{{ g.emoji }}</span>{{ g.name }}
-              <span v-if="g.lastStep===today" class="watered">💧 已浇水</span>
-              <button class="gdel" style="opacity:1" @click="del('goal',g.id)">撤下</button></span>
-            <span>{{ g.current }}/{{ g.target }}{{ g.unit }}</span>
+          <div class="goal-row">
+            <div class="pot" v-html="flowerSvg(g)"></div>
+            <div class="goal-main">
+              <div class="gt">
+                <span><span class="em">{{ g.emoji }}</span>{{ g.name }}
+                  <span v-if="g.lastStep===today" class="watered">💧 已浇水</span>
+                  <button class="gdel" style="opacity:1" @click="del('goal',g.id)">撤下</button></span>
+                <span>{{ g.current }}/{{ g.target }}{{ g.unit }}</span>
+              </div>
+              <div class="vine">
+                <span class="tr"><i :style="{width:goalPct(g)+'%'}"></i>
+                  <b v-for="ms in [25,50,75]" :key="ms" class="ms" :class="{ok:goalPct(g)>=ms}" :style="{left:ms+'%'}"></b>
+                </span>
+                <button class="step" @click="stepGoal(g)">＋1</button>
+              </div>
+              <div class="waterweek">
+                <span v-for="d in last7" :key="d" class="wd" :class="{ok:g.waterLog && g.waterLog.includes(d)}"></span>
+                <span class="streak" v-if="goalStreak(g)>0">🔥 连浇 {{ goalStreak(g) }} 天</span>
+                <span v-else style="font-size:10px;color:var(--ink-faint)">近 7 天浇水</span>
+              </div>
+              <div class="eta" v-if="g.current<g.target">每天 ＋1，约 <b>{{ g.target-g.current }}</b> 天后收成<span v-if="g.note"> · ✎ {{ g.note }}</span></div>
+              <div class="eta" v-else><b>🎉 已收成，加印喜报！</b></div>
+            </div>
           </div>
-          <div class="vine">
-            <span class="tr"><i :style="{width:goalPct(g)+'%'}"></i>
-              <b v-for="ms in [25,50,75]" :key="ms" class="ms" :class="{ok:goalPct(g)>=ms}" :style="{left:ms+'%'}"></b>
-            </span>
-            <button class="step" @click="stepGoal(g)">＋1</button>
-          </div>
-          <div class="waterweek">
-            <span v-for="d in last7" :key="d" class="wd" :class="{ok:g.waterLog && g.waterLog.includes(d)}"></span>
-            <span class="streak" v-if="goalStreak(g)>0">🔥 连浇 {{ goalStreak(g) }} 天</span>
-            <span v-else style="font-size:10px;color:var(--ink-faint)">近 7 天浇水</span>
-          </div>
-          <div class="eta" v-if="g.current<g.target">每天 ＋1，约 <b>{{ g.target-g.current }}</b> 天后收成<span v-if="g.note"> · ✎ {{ g.note }}</span></div>
-          <div class="eta" v-else><b>🎉 已收成，加印喜报！</b></div>
         </div>
       </div>
     </section>
 
     <!-- ======== 灵感剪报 ======== -->
     <section v-show="screen==='note'" class="m-sec">
+      <div class="pcard tilt" v-if="archivePick" style="margin-bottom:14px">
+        <span class="tape mini"></span>
+        <div class="sec-head"><span class="icn-inline" v-html="icon('daisy')"></span><h3>旧稿重读</h3><span class="en">ARCHIVE</span></div>
+        <p class="archive-q" style="font-size:13px"><span class="qt">❝</span>{{ archivePick.body }}</p>
+        <div class="archive-meta"><span>《{{ archivePick.title }}》</span><span v-if="archivePick.tag"># {{ archivePick.tag }}</span><span>{{ archivePick.date }}</span></div>
+      </div>
       <div class="pcard">
         <span class="tape green"></span>
         <div class="sec-head"><span class="icn-inline" v-html="icon('daisy')"></span><h3>灵感剪报夹</h3><span class="en">CLIPS</span>
