@@ -54,6 +54,7 @@
             <span class="mc-ic" v-html="icon(m.icon)"></span>
             <span><div class="mc-name">{{ m.name }}</div><div class="mc-en">{{ m.en }}</div></span>
           </div>
+          <span class="mc-flower" v-html="icon('daisy')"></span>
           <p class="mc-desc">{{ m.desc }}</p>
           <div class="mc-stat" v-if="m.id==='todo'">{{ todoDone }}/{{ todos.length }}<span>已完成</span></div>
           <div class="mc-stat" v-else-if="m.id==='check'">{{ checkDone }}/{{ checks.length }}<span>已盖章</span></div>
@@ -63,8 +64,7 @@
         </div>
       </div>
 
-      <div class="flower-divider"></div>
-      <p style="text-align:center"><span class="pencil">✎ 点任意版面进入采编，待办与打卡可直接在各自版面操作</span></p>
+      <div class="daily-quote"><span class="qm">❝</span>{{ dailyQuote }}<span class="qm">❞</span></div>
     </section>
 
     <!-- ======== 今日要务 ======== -->
@@ -77,7 +77,7 @@
               <span class="tail"><span class="cnt">{{ todoDone }}/{{ todos.length }}</span><button class="add" @click="openEditor('todo')">＋ 刊登</button></span>
             </div>
             <div v-if="!todos.length" class="empty"><span class="e">📌</span>今日版面空空，刊登一条要务吧</div>
-            <div v-for="x in todos" :key="x.id" class="todo" :class="{done:x.done}">
+            <div v-for="x in sortedTodos" :key="x.id" class="todo" :class="{done:x.done}">
               <i class="box" @click="toggleTodo(x)"></i>
               <span class="tx" @click="toggleTodo(x)" style="cursor:pointer">{{ x.text }}</span>
               <span class="chip" :class="x.level">{{ {high:'P0',mid:'P1',low:'P2'}[x.level] }}</span>
@@ -177,20 +177,24 @@
           <div class="pcard tilt-r">
             <span class="tape green"></span>
             <div class="sec-head"><h3>长线连载</h3><span class="en">SERIALS</span>
-              <span class="tail"><span class="cnt">平均 {{ goalAvg }}%</span><button class="add" @click="openEditor('goal')">＋ 开新坑</button></span>
+              <span class="tail"><span class="cnt">平均 {{ goalAvg }}%</span><button class="add" @click="openEditor('goal')">＋ 种一棵</button></span>
             </div>
-            <div v-if="!goals.length" class="empty"><span class="e">🌱</span>还没有长期目标，开一个连载吧</div>
+            <div v-if="!goals.length" class="empty"><span class="e">🌱</span>还没有长期目标，种一棵慢慢养吧</div>
             <div v-for="g in goals" :key="g.id" class="goal">
               <div class="gt">
                 <span><span class="em">{{ g.emoji }}</span>{{ g.name }}
+                  <span v-if="g.lastStep===today" class="watered">💧 今日已浇水</span>
                   <button class="gdel" @click="del('goal',g.id)">撤下</button></span>
                 <span>{{ g.current }} / {{ g.target }} {{ g.unit }}</span>
               </div>
               <div class="vine">
-                <span class="tr"><i :style="{width:goalPct(g)+'%'}"></i></span>
-                <button class="step" @click="stepGoal(g)">＋</button>
+                <span class="tr"><i :style="{width:goalPct(g)+'%'}"></i>
+                  <b v-for="ms in [25,50,75]" :key="ms" class="ms" :class="{ok:goalPct(g)>=ms}" :style="{left:ms+'%'}"></b>
+                </span>
+                <button class="step" @click="stepGoal(g)" title="浇水 +1">＋1</button>
               </div>
-              <div class="note" v-if="g.note">✎ {{ g.note }}</div>
+              <div class="eta" v-if="g.current<g.target">按每天 ＋1，约 <b>{{ g.target-g.current }}</b> 天后收成<span v-if="g.note"> · ✎ {{ g.note }}</span></div>
+              <div class="eta" v-else><b>🎉 已收成，加印喜报！</b><span v-if="g.note"> · ✎ {{ g.note }}</span></div>
             </div>
           </div>
         </div>
@@ -198,8 +202,8 @@
           <div class="pcard tilt-l">
             <span class="tape slant"></span>
             <div class="sec-head"><h3>编辑部寄语</h3><span class="en">WORDS</span></div>
-            <p style="font-size:13px;color:var(--ink-soft)">连载不怕慢，就怕断更。每天按一次「＋」，藤蔓就往前爬一格。</p>
-            <div style="margin-top:14px"><span class="pencil">✎ 目标达成时，本报会加印喜报 🎉</span></div>
+            <p style="font-size:13px;color:var(--ink-soft)">每个长期目标都是一棵花：点「＋1」浇一次水，藤蔓爬过 25% / 50% / 75% 会各开一朵里程碑小花，浇满就收成。</p>
+            <div style="margin-top:14px"><span class="pencil">✎ 今天浇过水的会挂上「已浇水」牌</span></div>
           </div>
         </div>
       </div>
@@ -210,13 +214,17 @@
       <div class="pcard tilt-l">
         <span class="tape"></span>
         <div class="sec-head"><h3>灵感剪报夹</h3><span class="en">CLIPPINGS</span>
-          <span class="tail"><span class="cnt">{{ notes.length }} 则</span><button class="add" @click="openEditor('notes')">＋ 剪一则</button></span>
+          <span class="tail"><span class="cnt">{{ filteredNotes.length }} / {{ notes.length }} 则</span><button class="add" @click="openEditor('notes')">＋ 剪一则</button></span>
         </div>
-        <div v-if="!notes.length" class="empty"><span class="e">✂️</span>剪报夹空空，去生活里剪点什么吧</div>
+        <div class="tagrow" v-if="noteTags.length">
+          <button class="tchip" :class="{on:noteTag===''}" @click="noteTag=''">全部</button>
+          <button v-for="t in noteTags" :key="t" class="tchip" :class="{on:noteTag===t}" @click="noteTag=t"># {{ t }}</button>
+        </div>
+        <div v-if="!filteredNotes.length" class="empty"><span class="e">✂️</span>剪报夹空空，去生活里剪点什么吧</div>
         <div class="cols c3">
-          <div class="col" v-for="(colItems,ci) in [notes.filter((_,i)=>i%3===0),notes.filter((_,i)=>i%3===1),notes.filter((_,i)=>i%3===2)]" :key="ci">
-            <div v-for="x in colItems" :key="x.id" class="clip">
-              <h4>{{ x.title }}<button class="del" @click="del('note',x.id)">撤下</button></h4>
+          <div class="col" v-for="(colItems,ci) in [filteredNotes.filter((_,i)=>i%3===0),filteredNotes.filter((_,i)=>i%3===1),filteredNotes.filter((_,i)=>i%3===2)]" :key="ci">
+            <div v-for="x in colItems" :key="x.id" class="clip" :class="{pinned:x.pinned}">
+              <h4>{{ x.title }}<button class="pin" :class="{on:x.pinned}" @click="pinNote(x)">{{ x.pinned?'已置顶':'置顶' }}</button><button class="del" @click="del('note',x.id)">撤下</button></h4>
               <p>{{ x.body }}</p>
               <div class="meta"><span v-if="x.tag"># {{ x.tag }}</span><span class="dt">{{ x.date }}</span></div>
             </div>

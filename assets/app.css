@@ -294,6 +294,35 @@ input,textarea,select{font-family:inherit;font-size:14px;color:var(--ink)}
 .clip .meta{display:flex;gap:8px;margin-top:7px;font-size:10px;color:var(--orange-deep);letter-spacing:.08em}
 .clip .meta .dt{color:var(--ink-faint);margin-left:auto}
 
+/* 每日一句 */
+.daily-quote{text-align:center;font-family:var(--serif);font-size:16px;font-weight:700;color:var(--ink-soft);padding:20px 20px 6px}
+.daily-quote .qm{color:var(--orange);font-size:24px;margin:0 8px;line-height:0;vertical-align:-6px}
+
+/* 模块卡角落小雏菊水印 */
+.mc-flower{position:absolute;right:-10px;bottom:-10px;opacity:.13;transform:rotate(18deg);pointer-events:none}
+.mc-flower .icn{width:46px;height:46px}
+
+/* 目标里程碑 + 浇水 */
+.vine .tr{position:relative}
+.vine .ms{position:absolute;top:50%;transform:translate(-50%,-50%);width:8px;height:8px;border-radius:50%;
+  background:var(--card);border:1.5px solid var(--line-strong);z-index:2}
+.vine .ms.ok{background:var(--orange);border-color:var(--orange-deep)}
+.watered{font-size:10px;color:var(--green-deep);background:var(--green-soft);border:1px solid var(--green);
+  border-radius:99px;padding:1px 8px;margin-left:8px;font-weight:700;white-space:nowrap}
+.goal .eta{font-size:11px;color:var(--ink-faint);margin-top:5px}
+.goal .eta b{color:var(--green-deep);font-family:var(--serif)}
+
+/* 剪报标签筛选 + 置顶 */
+.tagrow{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:13px}
+.tchip{padding:5px 13px;border-radius:99px;border:1.5px solid var(--line-strong);background:var(--card-2);
+  font-size:11.5px;font-weight:600;color:var(--ink-soft);transition:all .13s}
+.tchip.on{background:var(--orange);border-color:var(--orange-deep);color:#fff}
+.clip .pin{opacity:0;font-size:11px;color:var(--ink-faint);margin-left:auto;padding:0 4px}
+.clip:hover .pin{opacity:1}
+.clip .pin.on{opacity:1;color:var(--orange-deep);font-weight:700}
+.clip h4 .del{margin-left:6px}
+.clip.pinned{border-color:var(--orange);background:#fff8ea}
+
 /* ============ 编辑器弹窗 ============ */
 .mask{position:fixed;inset:0;background:rgba(90,70,48,.35);z-index:60;display:flex;align-items:center;justify-content:center;
   padding:20px;backdrop-filter:blur(2px)}

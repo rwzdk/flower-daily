@@ -30,9 +30,9 @@ const CONFIG = {
       ] },
     { id: "goal",  type: "goal",      icon: "sprout", name: "长线连载", en: "SERIALS",    desc: "长期目标，每天 +1",
       seed: [
-        { name: "读完《植物图鉴》", emoji: "📚", current: 128, target: 240, unit: "页", note: "读到菊科了，很应季" },
-        { name: "存下旅行基金", emoji: "✈️", current: 3200, target: 8000, unit: "元", note: "春天去看油菜花" },
-        { name: "学会 30 道家常菜", emoji: "🍳", current: 17, target: 30, unit: "道", note: "" }
+        { name: "读完《植物图鉴》", emoji: "📚", current: 128, target: 240, unit: "页", note: "读到菊科了，很应季", lastStep: "" },
+        { name: "存下旅行基金", emoji: "✈️", current: 3200, target: 8000, unit: "元", note: "春天去看油菜花", lastStep: "" },
+        { name: "学会 30 道家常菜", emoji: "🍳", current: 17, target: 30, unit: "道", note: "", lastStep: "" }
       ] },
     { id: "note",  type: "notes",     icon: "scissors", name: "灵感剪报", en: "CLIPPINGS",  desc: "摘录、灵感与碎碎念",
       seed: [
@@ -150,6 +150,15 @@ function createWorkbenchApp() {
         data: seedData(),
         checkinDay: todayStr(),
         ed: { show: false, type: null, form: {}, editing: null },
+        noteTag: "",
+        quotes: [
+          "把日子过成连载，每天一小块版面。",
+          "花会慢慢开，事要一件件办。",
+          "先办最难的那件，剩下的都是下坡。",
+          "记账不是抠门，是给生活校对版面。",
+          "每天浇一次水，藤蔓自己会往前爬。",
+          "灵感不剪下来，风一吹就没了。"
+        ],
         toasts: []
       };
     },
@@ -192,6 +201,20 @@ function createWorkbenchApp() {
       goalAvg() {
         if (!this.goals.length) return 0;
         return Math.round(this.goals.reduce((s, g) => s + Math.min(100, (g.current / (g.target || 1)) * 100), 0) / this.goals.length);
+      },
+      sortedTodos() {
+        const rank = { high: 0, mid: 1, low: 2 };
+        return this.todos.slice().sort((a, b) => (a.done - b.done) || ((rank[a.level] ?? 1) - (rank[b.level] ?? 1)));
+      },
+      noteTags() {
+        return [...new Set(this.notes.map(n => n.tag).filter(Boolean))];
+      },
+      filteredNotes() {
+        const list = this.noteTag ? this.notes.filter(n => n.tag === this.noteTag) : this.notes.slice();
+        return list.sort((a, b) => (b.pinned ? 1 : 0) - (a.pinned ? 1 : 0));
+      },
+      dailyQuote() {
+        return this.quotes[(+this.issueNo) % this.quotes.length];
       },
       totalProgress() {
         const parts = [];
@@ -269,7 +292,7 @@ function createWorkbenchApp() {
           const it = Object.assign({ id: uid() }, form);
           if (type === "todo") it.done = false;
           if (type === "checkin") { it.done = false; it.streak = 0; it.lastDone = ""; if (!it.emoji) it.emoji = "🌱"; }
-          if (type === "goal") { it.current = +it.current || 0; it.target = +it.target; if (!it.emoji) it.emoji = "🌱"; }
+          if (type === "goal") { it.current = +it.current || 0; it.target = +it.target; if (!it.emoji) it.emoji = "🌱"; it.lastStep = ""; }
           if (type === "ledger") { it.amount = +it.amount; if (!it.date) it.date = this.today; }
           if (type === "notes") it.date = this.today;
           list.unshift(it);
@@ -296,9 +319,12 @@ function createWorkbenchApp() {
       stepGoal(g) {
         if (g.current < g.target) {
           g.current = (+g.current || 0) + 1;
+          g.lastStep = this.today;
           if (g.current >= g.target) this.toast("🎉 目标达成，加印喜报！");
+          else this.toast("浇水成功，藤蔓 +1 🌿");
         }
       },
+      pinNote(x) { x.pinned = !x.pinned; },
       quickAdd() {
         const m = this.curMod;
         if (m && m.type !== "dashboard") this.openEditor(m.type);
