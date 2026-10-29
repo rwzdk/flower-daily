@@ -52,7 +52,8 @@ const FIELDS = {
   ],
   checkin: [
     { k: "name",  l: "习惯名称", t: "text", ph: "如：晨跑 3km" },
-    { k: "emoji", l: "图标 emoji", t: "text", ph: "如：🏃" }
+    { k: "emoji", l: "图标 emoji", t: "text", ph: "如：🏃" },
+    { k: "img",   l: "自选图章", t: "file", ph: "从本地选择一张图片作为图章" }
   ],
   ledger: [
     { k: "kind",   l: "收支类型", t: "seg", options: [{ v: "expense", l: "支出" }, { v: "income", l: "收入" }] },
@@ -90,9 +91,18 @@ const ICONS = {
   daisy: '<g fill="#fffdf6"><ellipse cx="12" cy="6.6" rx="2.2" ry="3.1"/><ellipse cx="17" cy="10.2" rx="2.2" ry="3.1" transform="rotate(72 17 10.2)"/><ellipse cx="15.2" cy="16.1" rx="2.2" ry="3.1" transform="rotate(144 15.2 16.1)"/><ellipse cx="8.8" cy="16.1" rx="2.2" ry="3.1" transform="rotate(216 8.8 16.1)"/><ellipse cx="7" cy="10.2" rx="2.2" ry="3.1" transform="rotate(288 7 10.2)"/></g><circle cx="12" cy="11.8" r="2.6" fill="#f6c453"/>'
 };
 
+/* ---- 模块卡角落专属手绘花（每张卡一种花） ---- */
+const CARD_FLOWERS = {
+  todo: '<path d="M24 27v16.5"/><path d="M24 40c-5-1.5-8.5-6-8.5-10.5 3.8.4 7.6 3.4 8.5 7" fill="#8cb874"/><path d="M14 11c0 9.5 4 16 10 16s10-6.5 10-16" fill="#f4a24a"/><path d="M14 11l3.5-5.5 3 4.5L23 4l2 6 3-4.5L34 11" fill="#f4a24a"/>',
+  check: '<g fill="#fffdf6"><ellipse cx="24" cy="7.6" rx="2.6" ry="4.4"/><ellipse cx="24" cy="7.6" rx="2.6" ry="4.4" transform="rotate(45 24 14)"/><ellipse cx="24" cy="7.6" rx="2.6" ry="4.4" transform="rotate(90 24 14)"/><ellipse cx="24" cy="7.6" rx="2.6" ry="4.4" transform="rotate(135 24 14)"/><ellipse cx="24" cy="7.6" rx="2.6" ry="4.4" transform="rotate(180 24 14)"/><ellipse cx="24" cy="7.6" rx="2.6" ry="4.4" transform="rotate(225 24 14)"/><ellipse cx="24" cy="7.6" rx="2.6" ry="4.4" transform="rotate(270 24 14)"/><ellipse cx="24" cy="7.6" rx="2.6" ry="4.4" transform="rotate(315 24 14)"/></g><circle cx="24" cy="14" r="4" fill="#f6c453"/><path d="M24 18.5c-.5 9 .5 17 1 25.5"/><path d="M24.5 34c-4.5-.6-8-4-9-8.5 4.5.4 8 3.6 9 7" fill="#8cb874"/>',
+  money: '<g fill="#f09a33"><ellipse cx="24" cy="8" rx="2.2" ry="4.6"/><ellipse cx="24" cy="8" rx="2.2" ry="4.6" transform="rotate(30 24 15)"/><ellipse cx="24" cy="8" rx="2.2" ry="4.6" transform="rotate(60 24 15)"/><ellipse cx="24" cy="8" rx="2.2" ry="4.6" transform="rotate(90 24 15)"/><ellipse cx="24" cy="8" rx="2.2" ry="4.6" transform="rotate(120 24 15)"/><ellipse cx="24" cy="8" rx="2.2" ry="4.6" transform="rotate(150 24 15)"/><ellipse cx="24" cy="8" rx="2.2" ry="4.6" transform="rotate(180 24 15)"/><ellipse cx="24" cy="8" rx="2.2" ry="4.6" transform="rotate(210 24 15)"/><ellipse cx="24" cy="8" rx="2.2" ry="4.6" transform="rotate(240 24 15)"/><ellipse cx="24" cy="8" rx="2.2" ry="4.6" transform="rotate(270 24 15)"/><ellipse cx="24" cy="8" rx="2.2" ry="4.6" transform="rotate(300 24 15)"/><ellipse cx="24" cy="8" rx="2.2" ry="4.6" transform="rotate(330 24 15)"/></g><circle cx="24" cy="15" r="5.2" fill="#6b573c"/><circle cx="22" cy="14" r=".9" fill="#f6c453"/><circle cx="26" cy="15.6" r=".9" fill="#f6c453"/><circle cx="23.4" cy="17" r=".9" fill="#f6c453"/><path d="M24 20.5v23"/><path d="M24 36c-4.5-.6-8-4-9-8.5 4.5.4 8 3.6 9 7" fill="#8cb874"/>',
+  goal: '<g fill="#8cb874"><ellipse cx="18" cy="11.5" rx="4.4" ry="5.6" transform="rotate(-28 18 11.5)"/><ellipse cx="30" cy="11.5" rx="4.4" ry="5.6" transform="rotate(28 30 11.5)"/><ellipse cx="18" cy="21" rx="4.4" ry="5.6" transform="rotate(28 18 21)"/><ellipse cx="30" cy="21" rx="4.4" ry="5.6" transform="rotate(-28 30 21)"/></g><path d="M24 16c.6 9-.4 17-2 28"/>',
+  note: '<path d="M24 19c-8 1-13-4-11-10 2-5 8-5 11-2 3-3 9-3 11 2 2 6-3 11-11 10z" fill="#f4a24a"/><circle cx="24" cy="12" r="2.8" fill="#6b573c"/><circle cx="22.8" cy="11" r=".7" fill="#f6c453"/><circle cx="25.2" cy="12.8" r=".7" fill="#f6c453"/><path d="M24 19c-.4 9 .4 16 1 24.5"/><path d="M24.5 33c-4.4-.6-7.8-4-8.8-8.4 4.4.4 7.8 3.5 8.8 6.8" fill="#8cb874"/>'
+};
+
 /* ---- 工具 ---- */
 function dstr(d) { return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0"); }
-function todayStr() { return dstr(new Date()); }
+function todayStr(d) { return dstr(d || new Date()); }
 function yesterdayStr() { const d = new Date(); d.setDate(d.getDate() - 1); return dstr(d); }
 function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2, 6); }
 
@@ -114,6 +124,27 @@ function seedData() {
 const EditorModal = {
   props: ["ed", "fields", "mod"],
   emits: ["save", "close"],
+  methods: {
+    pickImg(e, k) {
+      const file = e.target.files && e.target.files[0];
+      e.target.value = "";
+      if (!file) return;
+      const rd = new FileReader();
+      rd.onload = () => {
+        const img = new Image();
+        img.onload = () => {
+          const c = document.createElement("canvas");
+          const s = Math.min(1, 144 / Math.max(img.width, img.height));
+          c.width = Math.max(1, Math.round(img.width * s));
+          c.height = Math.max(1, Math.round(img.height * s));
+          c.getContext("2d").drawImage(img, 0, 0, c.width, c.height);
+          this.ed.form[k] = c.toDataURL("image/png");
+        };
+        img.src = rd.result;
+      };
+      rd.readAsDataURL(file);
+    }
+  },
   template: `
   <div class="mask" @click.self="$emit('close')">
     <div class="editor">
@@ -127,6 +158,11 @@ const EditorModal = {
         <select v-else-if="f.t==='select'" v-model="ed.form[f.k]">
           <option v-for="c in mod.categories||[]" :key="c" :value="c">{{ c }}</option>
         </select>
+        <div v-else-if="f.t==='file'" class="filepick">
+          <label class="fp-btn">📁 从本地选择图片<input type="file" accept="image/*" hidden @change="pickImg($event, f.k)"></label>
+          <span v-if="ed.form[f.k]" class="fp-prev"><img :src="ed.form[f.k]" alt=""><button class="fp-clear" @click="ed.form[f.k]=''">×</button></span>
+          <span v-else class="fp-hint">{{ f.ph || '可选，未选则显示 emoji' }}</span>
+        </div>
         <div v-else-if="f.t==='seg'" class="seg">
           <button v-for="o in f.options" :key="o.v" class="op" :class="{on:ed.form[f.k]===o.v}" @click="ed.form[f.k]=o.v">{{ o.l }}</button>
         </div>
@@ -263,6 +299,9 @@ function createWorkbenchApp() {
       catEmoji(cat) { return CAT_EMOJI[cat] || "📦"; },
       icon(name) {
         return `<svg class="icn" viewBox="0 0 24 24" fill="none" stroke="#6b573c" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">${ICONS[name] || ICONS.daisy}</svg>`;
+      },
+      cardIcon(id) {
+        return `<svg class="icn" viewBox="0 0 48 48" fill="none" stroke="#6b573c" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">${CARD_FLOWERS[id] || ICONS.daisy}</svg>`;
       },
       fmt(n) { return (Math.round(n * 100) / 100).toLocaleString("zh-CN"); },
       goalPct(g) { return Math.min(100, Math.round((g.current / (g.target || 1)) * 100)); },

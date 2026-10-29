@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 <title>花海生活报 · 随身版</title>
-<link rel="stylesheet" href="assets/app.css?v=5" />
+<link rel="stylesheet" href="assets/app.css?v=6" />
 </head>
 <body class="m-body" style="background:var(--paper)">
 <div id="app">
@@ -85,7 +85,7 @@
         <div class="bloom-grid">
           <div v-for="x in checks" :key="x.id" class="bloom" :class="{done:x.done}" @click="toggleCheck(x)">
             <button class="del" style="display:grid" @click.stop="del('check',x.id)">×</button>
-            <div class="e">{{ x.emoji }}</div>
+            <div class="e"><img v-if="x.img" class="stamp-img" :src="x.img" alt=""><template v-else>{{ x.emoji }}</template></div>
             <div class="n">{{ x.name }}</div>
             <div class="s">连续 {{ x.streak }} 天</div>
           </div>
@@ -218,7 +218,7 @@
 </div>
 
 <script src="assets/vue.global.prod.js"></script>
-<script src="assets/app.js?v=5"></script>
+<script src="assets/app.js?v=6"></script>
 <script>
 try {
   createWorkbenchApp().mount("#app");

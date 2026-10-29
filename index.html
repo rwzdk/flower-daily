@@ -4,12 +4,93 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>花海生活报 · 我的工作台</title>
-<link rel="stylesheet" href="assets/app.css?v=5" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&display=swap" />
+<link rel="stylesheet" href="assets/app.css?v=10" />
 </head>
 <body class="d-body">
 <div id="app">
   <img class="flower-corner fc-tl" src="assets/flower-corner.jpg" alt="" />
   <img class="flower-corner fc-br" src="assets/flower-corner.jpg" alt="" />
+
+  <!-- 背景手绘贴图 -->
+  <span class="doodle dd-sun"><svg viewBox="0 0 80 80" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round">
+    <circle cx="40" cy="40" r="14"/><circle cx="40.8" cy="39.4" r="13.2" opacity=".35"/>
+    <path d="M40 12v8M40 60v8M12 40h8M60 40h8M20.2 20.2l5.6 5.6M54.2 54.2l5.6 5.6M59.8 20.2l-5.6 5.6M25.8 54.2l-5.6 5.6"/>
+  </svg></span>
+  <span class="doodle dd-cloud"><svg viewBox="0 0 96 48" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round">
+    <path d="M16 38a8.5 8.5 0 0 1 1.8-16.7A13 13 0 0 1 42 12a10.5 10.5 0 0 1 19.5 5A8.5 8.5 0 0 1 70 38Z"/>
+    <path d="M30 30c2-3 6-4 9-3" opacity=".5"/>
+  </svg></span>
+  <span class="doodle dd-leaf"><svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M20 36C8 30 6 16 12 6c10 2 18 10 16 22-2 6-5 8-8 8Z"/>
+    <path d="M14 12c4 8 8 14 14 20"/>
+  </svg></span>
+  <span class="doodle dd-butterfly"><svg viewBox="0 0 64 58" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M32 16c-10-14-26-12-24-2 1 7 11 7 15 6"/>
+    <path d="M32 16c10-14 26-12 24-2-1 7-11 7-15 6"/>
+    <path d="M32 28c-8-1-18 1-16 9 2 7 12 4 16-3"/>
+    <path d="M32 28c8-1 18 1 16 9-2 7-12 4-16-3"/>
+    <path d="M32 14v32"/><path d="M29 12c-2-3-5-5-8-6M35 12c2-3 5-5 8-6"/>
+  </svg></span>
+  <span class="doodle dd-daisy"><svg viewBox="0 0 60 60" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="30" cy="30" r="5.5" fill="rgba(240,154,51,.4)"/>
+    <path d="M30 24.5c-3.5-7-1-14 0-15 1 1 3.5 8 0 15Z"/>
+    <g transform="rotate(45 30 30)"><path d="M30 24.5c-3.5-7-1-14 0-15 1 1 3.5 8 0 15Z"/></g>
+    <g transform="rotate(90 30 30)"><path d="M30 24.5c-3.5-7-1-14 0-15 1 1 3.5 8 0 15Z"/></g>
+    <g transform="rotate(135 30 30)"><path d="M30 24.5c-3.5-7-1-14 0-15 1 1 3.5 8 0 15Z"/></g>
+    <g transform="rotate(180 30 30)"><path d="M30 24.5c-3.5-7-1-14 0-15 1 1 3.5 8 0 15Z"/></g>
+    <g transform="rotate(225 30 30)"><path d="M30 24.5c-3.5-7-1-14 0-15 1 1 3.5 8 0 15Z"/></g>
+    <g transform="rotate(270 30 30)"><path d="M30 24.5c-3.5-7-1-14 0-15 1 1 3.5 8 0 15Z"/></g>
+    <g transform="rotate(315 30 30)"><path d="M30 24.5c-3.5-7-1-14 0-15 1 1 3.5 8 0 15Z"/></g>
+  </svg></span>
+  <span class="doodle dd-sparkle"><svg viewBox="0 0 60 60" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M20 6l2.6 8L30.5 16.6 22.6 19.2 20 27l-2.6-7.8L9.5 16.6l7.9-2.6Z"/>
+    <path d="M44 30l1.8 5.5 5.3 1.8-5.3 1.9L44 44.6l-1.8-5.4-5.3-1.9 5.3-1.8Z"/>
+    <path d="M14 40l1.3 4 4 1.4-4 1.4L14 50.8l-1.3-4-4-1.4 4-1.4Z"/>
+  </svg></span>
+  <span class="doodle dd-bee"><svg viewBox="0 0 64 52" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+    <ellipse cx="32" cy="33" rx="14" ry="10"/>
+    <path d="M26 24v18M34 23v20"/>
+    <path d="M27 23c-4-9-13-11-15-5-2 6 7 9 13 7"/>
+    <path d="M37 23c2-9 11-13 14-8 3 6-5 10-12 9"/>
+    <path d="M18 33h-6M20 37l-6 3M46 30l5-3"/>
+  </svg></span>
+  <span class="doodle dd-sprig"><svg viewBox="0 0 56 72" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M28 68C26 44 26 24 31 6"/>
+    <path d="M27.5 57c-6-1-11-6-12-12 6 0 11 4 12 9"/>
+    <path d="M28.5 45c6-1 11-6 12-12-6 0-11 4-12 9"/>
+    <path d="M27.5 33c-6-1-11-6-12-12 6 0 11 4 12 9"/>
+    <path d="M29.5 21c6-1 11-6 12-12-6 0-11 4-12 9"/>
+  </svg></span>
+  <span class="doodle dd-tulip"><svg viewBox="0 0 48 64" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M24 34v26"/>
+    <path d="M24 54c-6-2-10-8-10-14 4 0 9 4 10 8"/>
+    <path d="M24 47c6-2 10-8 10-14-4 0-9 4-10 8"/>
+    <path d="M14 15c0 11 4 19 10 19s10-8 10-19"/>
+    <path d="M14 15l4-7 3 5.5L24 6l3 7.5L30 8l4 7"/>
+  </svg></span>
+  <span class="doodle dd-heart"><svg viewBox="0 0 40 36" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M20 32C8 24 4 16 6 10.5 8 5.5 15 4.5 20 10.5 25 4.5 32 5.5 34 10.5c2 5.5-2 13.5-14 21.5Z"/>
+  </svg></span>
+  <span class="doodle dd-snail"><svg viewBox="0 0 66 44" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="24" cy="22" r="14"/>
+    <path d="M24 22c2.5 0 4-2 3-4.5-1.2-3-6.5-2.4-7.6.8-1.2 3.6 1.8 7.2 5.6 7.2"/>
+    <path d="M12 34c10 3 24 3 32-1 4-2 8-6 8-11 0-3-2-5-4.5-4.6-2 .3-3 2-3.4 4"/>
+    <path d="M47 13l1.5-7M53 14.5l4-5.5"/>
+    <circle cx="49" cy="5" r="1.6" fill="currentColor" stroke="none"/><circle cx="58.5" cy="8" r="1.6" fill="currentColor" stroke="none"/>
+  </svg></span>
+  <span class="doodle dd-mushroom"><svg viewBox="0 0 48 50" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M5 25C5 13 13.5 6 24 6s19 7 19 19c-7 2-31 2-38 0Z"/>
+    <path d="M17 26c0 8-.8 13-1.8 17 3.4 2.4 14.2 2.4 17.6 0-1-4-1.8-9-1.8-17"/>
+    <circle cx="17" cy="15" r="2.2"/><circle cx="29" cy="11" r="2.6"/><circle cx="33.5" cy="19" r="1.8"/>
+  </svg></span>
+  <span class="doodle dd-grass"><svg viewBox="0 0 64 36" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
+    <path d="M8 34C7 24 5 16 2 10"/>
+    <path d="M19 34c0-10-1-20-4-26"/>
+    <path d="M31 34c1-12-1-22-6-30"/>
+    <path d="M43 34c0-10 2-18 8-24"/>
+    <path d="M55 34c1-8 4-14 8-18"/>
+  </svg></span>
   <div class="d-page">
 
     <!-- ======== 报头 ======== -->
@@ -17,7 +98,7 @@
       <img class="bouquet" src="assets/flower-corner.jpg" alt="" />
       <div class="stamp-corner"><span v-html="icon('daisy')"></span></div>
       <div class="meta-top"><span>FLOWER FIELD DAILY PRESS</span><span>vol.{{ issueNo }} · 每日刊</span></div>
-      <h1>花海生活报</h1>
+      <h1><svg class="t-deco" viewBox="0 0 56 72" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M28 68C26 44 26 24 31 6"/><path d="M27.5 57c-6-1-11-6-12-12 6 0 11 4 12 9"/><path d="M28.5 45c6-1 11-6 12-12-6 0-11 4-12 9"/><path d="M27.5 33c-6-1-11-6-12-12 6 0 11 4 12 9"/><path d="M29.5 21c6-1 11-6 12-12-6 0-11 4-12 9"/></svg>花海生活报<svg class="t-deco flip" viewBox="0 0 56 72" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M28 68C26 44 26 24 31 6"/><path d="M27.5 57c-6-1-11-6-12-12 6 0 11 4 12 9"/><path d="M28.5 45c6-1 11-6 12-12-6 0-11 4-12 9"/><path d="M27.5 33c-6-1-11-6-12-12 6 0 11 4 12 9"/><path d="M29.5 21c6-1 11-6 12-12-6 0-11 4-12 9"/></svg></h1>
       <div class="sub">花 海 编 辑 部 · 每 日 出 版</div>
       <div class="rule"><i></i><b>★ 今日晴 · 宜播种 · 宜记录 ★</b><i></i></div>
     </header>
@@ -56,7 +137,7 @@
             <span class="mc-ic" v-html="icon(m.icon)"></span>
             <span><div class="mc-name">{{ m.name }}</div><div class="mc-en">{{ m.en }}</div></span>
           </div>
-          <span class="mc-flower" v-html="icon('daisy')"></span>
+          <span class="mc-flower" v-html="cardIcon(m.id)"></span>
           <p class="mc-desc">{{ m.desc }}</p>
           <div class="mc-stat" v-if="m.id==='todo'">{{ todoDone }}/{{ todos.length }}<span>已完成</span></div>
           <div class="mc-stat" v-else-if="m.id==='check'">{{ checkDone }}/{{ checks.length }}<span>已盖章</span></div>
@@ -119,7 +200,7 @@
             <div class="bloom-grid">
               <div v-for="x in checks" :key="x.id" class="bloom" :class="{done:x.done}" @click="toggleCheck(x)">
                 <button class="del" @click.stop="del('check',x.id)">×</button>
-                <div class="e">{{ x.emoji }}</div>
+                <div class="e"><img v-if="x.img" class="stamp-img" :src="x.img" alt=""><template v-else>{{ x.emoji }}</template></div>
                 <div class="n">{{ x.name }}</div>
                 <div class="s">连续 {{ x.streak }} 天</div>
               </div>
@@ -271,7 +352,7 @@
 </div>
 
 <script src="assets/vue.global.prod.js"></script>
-<script src="assets/app.js?v=5"></script>
+<script src="assets/app.js?v=8"></script>
 <script>
 try {
   createWorkbenchApp().mount("#app");

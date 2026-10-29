@@ -1,0 +1,4 @@
+.trae-html-share-packages/
+__pycache__/
+*.pyc
+.DS_Store

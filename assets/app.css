@@ -135,8 +135,8 @@ input,textarea,select{font-family:inherit;font-size:14px;color:var(--ink)}
 
 /* 花海分隔带 */
 .flower-divider{
-  height:88px;margin:6px 0 2px;pointer-events:none;
-  background:url("flower-divider.jpg") bottom center / cover no-repeat;
+  height:104px;margin:10px 0 2px;pointer-events:none;
+  background:url("flower-band.jpg") center / auto 100% repeat-x;
   mix-blend-mode:multiply;opacity:.95;
 }
 .flower-corner{position:fixed;pointer-events:none;z-index:0;mix-blend-mode:multiply;opacity:.9}
@@ -148,8 +148,10 @@ input,textarea,select{font-family:inherit;font-size:14px;color:var(--ink)}
 /* 报头 */
 .masthead{position:relative;text-align:center;padding:20px 0 14px;border-bottom:3px double var(--ink-line)}
 .masthead .meta-top{display:flex;justify-content:space-between;font-size:12px;color:var(--ink-soft);letter-spacing:.14em;padding:0 4px 12px}
-.masthead h1{font-family:var(--serif);font-size:50px;font-weight:900;letter-spacing:.16em;color:var(--green-deep);
-  text-shadow:2px 2px 0 rgba(240,154,51,.28)}
+.masthead h1{font-family:"Ma Shan Zheng","Kaiti SC","STKaiti","KaiTi",var(--serif);font-size:56px;font-weight:400;letter-spacing:.1em;color:var(--green-deep);
+  text-shadow:3px 3px 0 rgba(240,154,51,.3)}
+.masthead h1 .t-deco{width:32px;height:32px;vertical-align:1px;color:#8cb874;margin:0 8px}
+.masthead h1 .t-deco.flip{transform:scaleX(-1)}
 .masthead .sub{font-size:12px;color:var(--ink-soft);letter-spacing:.34em;margin-top:6px}
 .masthead .rule{display:flex;align-items:center;gap:12px;margin-top:13px}
 .masthead .rule i{flex:1;height:1px;background:var(--line-strong)}
@@ -194,13 +196,16 @@ input,textarea,select{font-family:inherit;font-size:14px;color:var(--ink)}
 /* 首页模块导览卡 */
 .modgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:8px}
 .modcard{position:relative;background:var(--card);border:1.5px solid var(--line-strong);border-radius:var(--r-card);
-  box-shadow:var(--shadow-card);padding:16px 18px;cursor:pointer;transition:transform .15s, box-shadow .18s;overflow:hidden}
-.modcard:hover{transform:translateY(-3px) rotate(0)!important;box-shadow:var(--shadow-hover)}
+  box-shadow:var(--shadow-card);padding:16px 18px;cursor:pointer;overflow:hidden;
+  transition:transform .18s ease, box-shadow .2s ease, border-color .18s ease}
+.modcard:hover{transform:translateY(-4px) rotate(0)!important;box-shadow:var(--shadow-hover);border-color:var(--green)}
 .modcard:nth-child(odd){transform:rotate(-.4deg)} .modcard:nth-child(even){transform:rotate(.5deg)}
 .modcard .mc-head{display:flex;align-items:center;gap:11px}
 .modcard .mc-ic{width:38px;height:38px;border-radius:11px;display:grid;place-items:center;font-size:18px;
-  background:var(--card-2);border:1.5px solid var(--line-strong)}
-.modcard .mc-name{font-size:15px;font-weight:800;font-family:var(--serif);color:var(--green-deep)}
+  background:var(--card-2);border:1.5px solid var(--line-strong);transition:transform .25s ease, background .25s ease}
+.modcard:hover .mc-ic{transform:rotate(-9deg) scale(1.08);background:var(--green-soft)}
+.modcard .mc-name{font-size:15px;font-weight:800;font-family:var(--serif);color:var(--green-deep);transition:color .18s}
+.modcard:hover .mc-name{color:var(--orange-deep)}
 .modcard .mc-en{font-size:9.5px;color:var(--ink-faint);letter-spacing:.18em}
 .modcard .mc-desc{font-size:12px;color:var(--ink-soft);margin-top:9px}
 .modcard .mc-stat{margin-top:10px;font-family:var(--serif);font-size:18px;font-weight:900;color:var(--ink)}
@@ -236,6 +241,17 @@ input,textarea,select{font-family:inherit;font-size:14px;color:var(--ink)}
   border-radius:var(--r-tile);padding:13px 6px 11px;cursor:pointer;transition:transform .13s, background .2s;user-select:none}
 .bloom:hover{transform:translateY(-2px)}
 .bloom .e{font-size:23px}
+.bloom .stamp-img{width:30px;height:30px;object-fit:cover;border-radius:8px;border:1.5px solid var(--line-strong);vertical-align:middle}
+/* 编辑器本地图片选择 */
+.filepick{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.fp-btn{display:inline-flex;align-items:center;gap:5px;padding:7px 12px;border:1.5px dashed var(--line-strong);border-radius:9px;
+  font-size:12.5px;color:var(--ink-soft);cursor:pointer;background:var(--card-2)}
+.fp-btn:hover{color:var(--orange-deep);border-color:var(--orange)}
+.fp-hint{font-size:11px;color:var(--ink-faint)}
+.fp-prev{position:relative;display:inline-block}
+.fp-prev img{width:38px;height:38px;object-fit:cover;border-radius:8px;border:1.5px solid var(--line-strong)}
+.fp-clear{position:absolute;top:-7px;right:-7px;width:17px;height:17px;border-radius:50%;background:var(--card);
+  border:1.5px solid var(--line-strong);font-size:10px;color:var(--ink-faint);cursor:pointer;line-height:1}
 .bloom .n{font-size:12px;font-weight:700;margin-top:4px}
 .bloom .s{font-size:9.5px;color:var(--ink-faint);letter-spacing:.05em;margin-top:1px}
 .bloom .del{position:absolute;top:-7px;right:-6px;width:19px;height:19px;border-radius:50%;background:var(--card);
@@ -301,13 +317,38 @@ body::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;
 .fc-tl{top:-6px;left:-26px;width:170px;transform:rotate(160deg);opacity:.4}
 .fc-br{bottom:-10px;right:-30px;width:230px;transform:rotate(-8deg);opacity:.45}
 
+/* 背景手绘贴图（锚定在版面两侧页边留白带，左右交错排布） */
+.doodle{position:fixed;pointer-events:none;z-index:0;opacity:.5;mix-blend-mode:multiply}
+.doodle svg{display:block;width:100%;height:auto}
+/* 左侧页边（自上而下）：云 → 飘叶 → 雏菊 → 蜜蜂 → 爱心 → 郁金香 → 蜗牛 */
+.dd-cloud{top:168px;right:calc(50% + 596px);width:88px;color:#7a603a;opacity:.3;--r:0deg;animation:ddFloat 10s ease-in-out infinite}
+.dd-leaf{top:264px;right:calc(50% + 614px);width:32px;color:#5f8f52;opacity:.4;transform:rotate(24deg)}
+.dd-daisy{top:35%;right:calc(50% + 602px);width:54px;color:#8a6f4d;transform:rotate(-10deg)}
+.dd-bee{top:55%;right:calc(50% + 596px);width:50px;color:#8a6f4d;--r:-8deg;animation:ddBob 5.5s ease-in-out infinite}
+.dd-heart{top:74%;right:calc(50% + 598px);width:28px;color:#d17f18;transform:rotate(-8deg);opacity:.4}
+.dd-tulip{bottom:130px;right:calc(50% + 598px);width:50px;color:#5f8f52;transform:rotate(6deg)}
+.dd-snail{bottom:56px;right:calc(50% + 620px);width:52px;color:#8a6f4d;transform:rotate(2deg)}
+/* 右侧页边（自上而下）：太阳 → 蝴蝶 → 闪光 → 枝叶 → 蘑菇 → 草丛 */
+.dd-sun{top:52px;left:calc(50% + 600px);width:72px;color:#d17f18;opacity:.55;--r:8deg;animation:ddFloat 8s ease-in-out infinite}
+.dd-butterfly{top:215px;left:calc(50% + 612px);width:56px;color:#d17f18;--r:12deg;animation:ddBob 6.5s ease-in-out infinite reverse}
+.dd-sparkle{top:44%;left:calc(50% + 618px);width:44px;color:#d17f18;animation:ddTwinkle 3.4s ease-in-out infinite}
+.dd-sprig{top:63%;left:calc(50% + 606px);width:54px;color:#5f8f52;transform:rotate(-12deg)}
+.dd-mushroom{bottom:150px;left:calc(50% + 610px);width:44px;color:#d17f18;transform:rotate(-4deg)}
+.dd-grass{bottom:64px;left:calc(50% + 596px);width:58px;color:#5f8f52;opacity:.45}
+@keyframes ddFloat{0%,100%{transform:rotate(var(--r,0deg)) translateY(0)}50%{transform:rotate(var(--r,0deg)) translateY(-9px)}}
+@keyframes ddBob{0%,100%{transform:rotate(var(--r,0deg)) translateY(0)}50%{transform:rotate(calc(var(--r,0deg) + 5deg)) translateY(-11px)}}
+@keyframes ddTwinkle{0%,100%{opacity:.28;transform:scale(.9) rotate(-6deg)}50%{opacity:.6;transform:scale(1.06) rotate(-6deg)}}
+@media (max-width:1300px){.doodle{display:none}}
+
 /* 每日一句 */
 .daily-quote{text-align:center;font-family:var(--serif);font-size:16px;font-weight:700;color:var(--ink-soft);padding:20px 20px 6px}
 .daily-quote .qm{color:var(--orange);font-size:24px;margin:0 8px;line-height:0;vertical-align:-6px}
 
-/* 模块卡角落小雏菊水印 */
-.mc-flower{position:absolute;right:-10px;bottom:-10px;opacity:.13;transform:rotate(18deg);pointer-events:none}
-.mc-flower .icn{width:46px;height:46px}
+/* 模块卡角落专属手绘花 */
+.mc-flower{position:absolute;right:6px;bottom:2px;opacity:.55;transform:rotate(8deg);pointer-events:none;
+  transition:transform .3s ease, opacity .3s ease}
+.mc-flower .icn{width:52px;height:52px}
+.modcard:hover .mc-flower{transform:rotate(-6deg) scale(1.18);opacity:.95}
 
 /* 目标里程碑 + 浇水 */
 .vine .tr{position:relative}
