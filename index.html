@@ -272,6 +272,23 @@
 
 <script src="assets/vue.global.prod.js"></script>
 <script src="assets/app.js?v=5"></script>
-<script>createWorkbenchApp().mount("#app");</script>
+<script>
+try {
+  createWorkbenchApp().mount("#app");
+} catch (e) {
+  failBanner(e);
+}
+// 挂载后自检：若页面仍有未渲染的 {{ }} 模板，说明脚本没有正常执行
+if (document.getElementById("app").textContent.indexOf("{{") !== -1) {
+  failBanner({ message: "脚本未正常执行，多为浏览器缓存了旧版文件" });
+}
+function failBanner(e) {
+  document.getElementById("app").innerHTML =
+    '<div style="max-width:420px;margin:60px auto;padding:28px;border:2px solid #e07b39;border-radius:14px;font-family:sans-serif;text-align:center">' +
+    '<h2 style="margin:0 0 10px">📰 报纸印刷故障</h2>' +
+    '<p style="margin:6px 0">页面没有正常渲染，请按 <b>Ctrl+F5</b> 强制刷新重试。</p>' +
+    '<p style="color:#999;font-size:12px">' + (e && e.message ? e.message : "") + "</p></div>";
+}
+</script>
 </body>
 </html>
