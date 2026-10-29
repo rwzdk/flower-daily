@@ -1,0 +1,190 @@
+<script setup>
+import { useApp } from "./store";
+import EditorModal from "./components/EditorModal.vue";
+import ToastList from "./components/ToastList.vue";
+import BloomGrid from "./components/BloomGrid.vue";
+import GoalCard from "./components/GoalCard.vue";
+import NoteClip from "./components/NoteClip.vue";
+
+const app = useApp();
+const { screen, drawer, ed, noteTag, cfg, cnDate, issueNo, greeting, totalProgress,
+  todoDone, todos, checkDone, checks, todayOut, goalAvg, notes, dailyQuote, monthOut,
+  sortedTodos, bills, monthIn, catBars, goals, archivePick, filteredNotes, noteTags,
+  edFields, edMod, go, openEditor, saveRecord, del, toggleTodo, fmt, catEmoji, quickAdd } = app;
+</script>
+
+<template>
+  <div class="m-wrap">
+    <img class="flower-corner fc-tl" src="../assets/flower-corner.jpg" alt="" />
+    <img class="flower-corner fc-br" src="../assets/flower-corner.jpg" alt="" />
+
+    <!-- ======== 顶栏（小报头） ======== -->
+    <header class="m-topbar">
+      <button class="menu" @click="drawer=true">☰</button>
+      <div class="brand" style="display:flex;align-items:center;justify-content:center;gap:6px"><span class="icn-inline" v-html="app.icon('daisy')"></span>花海生活报</div>
+      <div class="dt">NO.{{ issueNo }} · {{ cnDate }}</div>
+    </header>
+
+    <main class="m-screen">
+
+      <!-- ======== 头版 ======== -->
+      <section v-show="screen==='home'">
+        <div class="m-headline">
+          <h2>{{ greeting }}，<em>{{ cfg.profile.name }}</em>！<br/>今日进度 {{ totalProgress }}%</h2>
+          <p class="lede">要务 {{ todoDone }}/{{ todos.length }} · 盖章 {{ checkDone }}/{{ checks.length }} · 支出 ¥{{ fmt(todayOut) }}</p>
+          <div class="hstats">
+            <div class="hstat"><div class="n">{{ todoDone }}/{{ todos.length }}</div><div class="t">要务</div></div>
+            <div class="hstat"><div class="n">{{ checkDone }}/{{ checks.length }}</div><div class="t">盖章</div></div>
+            <div class="hstat"><div class="n">{{ goalAvg }}%</div><div class="t">连载</div></div>
+          </div>
+        </div>
+
+        <div class="modgrid">
+          <div v-for="m in cfg.modules.filter(x=>x.id!=='home')" :key="m.id" class="modcard" @click="go(m.id)">
+            <span class="tape mini"></span>
+            <div class="mc-head">
+              <span class="mc-ic" v-html="app.icon(m.icon)"></span>
+              <span><div class="mc-name" style="font-size:13.5px">{{ m.name }}</div><div class="mc-en">{{ m.en }}</div></span>
+            </div>
+            <span class="mc-flower" v-html="app.icon('daisy')"></span>
+            <div class="mc-stat" style="font-size:15px" v-if="m.id==='todo'">{{ todoDone }}/{{ todos.length }}<span>完成</span></div>
+            <div class="mc-stat" style="font-size:15px" v-else-if="m.id==='check'">{{ checkDone }}/{{ checks.length }}<span>盖章</span></div>
+            <div class="mc-stat" style="font-size:15px" v-else-if="m.id==='money'">¥{{ fmt(monthOut) }}<span>月支出</span></div>
+            <div class="mc-stat" style="font-size:15px" v-else-if="m.id==='goal'">{{ goalAvg }}%<span>进度</span></div>
+            <div class="mc-stat" style="font-size:15px" v-else-if="m.id==='note'">{{ notes.length }}<span>则剪报</span></div>
+          </div>
+        </div>
+        <div class="daily-quote" style="font-size:14px;padding-top:14px"><span class="qm">❝</span>{{ dailyQuote }}<span class="qm">❞</span></div>
+        <div class="values" style="font-size:11.5px">
+          <div class="v"><b>为谁而办</b>想把日子过好的普通人——只要一张每天付印的小报，不需要复杂系统。</div>
+          <div class="v"><b>解决什么</b>计划散、坚持难、账目糊、目标远、灵感易丢。</div>
+          <div class="v"><b>本报怎么办</b>要事勾掉、习惯盖章、收支入账、目标浇水、灵感剪贴——全在本地。</div>
+        </div>
+      </section>
+
+      <!-- ======== 今日要务 ======== -->
+      <section v-show="screen==='todo'" class="m-sec">
+        <div class="pcard">
+          <span class="tape"></span>
+          <div class="sec-head"><span class="icn-inline" v-html="app.icon('daisy')"></span><h3>今日要务</h3><span class="en">AGENDA</span>
+            <span class="tail"><span class="cnt">{{ todoDone }}/{{ todos.length }}</span><button class="add" @click="openEditor('todo')">＋</button></span>
+          </div>
+          <div v-if="!todos.length" class="empty"><span class="e">📌</span>刊登一条今日要务吧</div>
+          <div v-for="x in sortedTodos" :key="x.id" class="todo" :class="{done:x.done}">
+            <i class="box" @click="toggleTodo(x)"></i>
+            <span class="tx" @click="toggleTodo(x)">{{ x.text }}</span>
+            <span class="chip" :class="x.level">{{ {high:'P0',mid:'P1',low:'P2'}[x.level] }}</span>
+            <button class="del" @click="del('todo',x.id)">×</button>
+          </div>
+          <div style="margin-top:10px"><span class="pencil">✎ 点事项即可划掉</span></div>
+        </div>
+      </section>
+
+      <!-- ======== 盖章处 ======== -->
+      <section v-show="screen==='check'" class="m-sec">
+        <div class="pcard">
+          <span class="tape green slant"></span>
+          <div class="stamp-pic" v-html="app.icon('mail')"></div>
+          <div class="sec-head" style="padding-right:60px"><span class="icn-inline" v-html="app.icon('daisy')"></span><h3>盖章处</h3><span class="en">STAMPS</span>
+            <span class="tail"><span class="cnt">{{ checkDone }}/{{ checks.length }}</span><button class="add" @click="openEditor('checkin')">＋</button></span>
+          </div>
+          <div v-if="!checks.length" class="empty"><span class="e">🌷</span>种下第一个习惯吧</div>
+          <BloomGrid />
+          <div style="margin-top:10px"><span class="pencil">✎ 完成就盖戳，跨天自动翻新</span></div>
+        </div>
+      </section>
+
+      <!-- ======== 账房 ======== -->
+      <section v-show="screen==='money'" class="m-sec">
+        <div class="pcard">
+          <span class="tape"></span>
+          <div class="sec-head"><span class="icn-inline" v-html="app.icon('daisy')"></span><h3>账房流水</h3><span class="en">LEDGER</span>
+            <span class="tail"><button class="add" @click="openEditor('ledger')">＋ 记一笔</button></span>
+          </div>
+          <div v-if="!bills.length" class="empty"><span class="e">🧾</span>账本空空，记一笔吧</div>
+          <div v-for="x in bills" :key="x.id" class="bill">
+            <span class="cat-ic">{{ catEmoji(x.cat) }}</span>
+            <span class="info"><span class="t">{{ x.note || x.cat }}</span><br/><span class="d">{{ x.cat }} · {{ x.date }}</span></span>
+            <span class="amt" :class="x.kind==='income'?'in':'out'">{{ x.kind==='income'?'+':'−' }}{{ fmt(x.amount) }}</span>
+            <button class="del" @click="del('money',x.id)">×</button>
+          </div>
+          <div class="bill-total"><span>本月</span><b>支 <span class="out-sum">¥{{ fmt(monthOut) }}</span> · 收 ¥{{ fmt(monthIn) }}</b></div>
+        </div>
+        <div class="pcard" style="margin-top:16px">
+          <span class="tape green"></span>
+          <div class="sec-head"><span class="icn-inline" v-html="app.icon('daisy')"></span><h3>支出构成</h3><span class="en">CHART</span></div>
+          <div v-if="!catBars.length" class="empty"><span class="e">📊</span>本月暂无支出</div>
+          <div v-for="c in catBars" :key="c.cat" class="cbar">
+            <span class="lb">{{ catEmoji(c.cat) }} {{ c.cat }}</span>
+            <span class="tr"><i :style="{width:c.pct+'%'}"></i></span>
+            <span class="vl">¥{{ fmt(c.v) }}</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ======== 长线连载 ======== -->
+      <section v-show="screen==='goal'" class="m-sec">
+        <div class="pcard">
+          <span class="tape slant"></span>
+          <div class="sec-head"><span class="icn-inline" v-html="app.icon('daisy')"></span><h3>长线连载</h3><span class="en">SERIALS</span>
+            <span class="tail"><span class="cnt">{{ goalAvg }}%</span><button class="add" @click="openEditor('goal')">＋ 种一棵</button></span>
+          </div>
+          <div v-if="!goals.length" class="empty"><span class="e">🌱</span>种一棵长期目标慢慢养</div>
+          <GoalCard v-for="g in goals" :key="g.id" :g="g" />
+        </div>
+      </section>
+
+      <!-- ======== 灵感剪报 ======== -->
+      <section v-show="screen==='note'" class="m-sec">
+        <div class="pcard tilt" v-if="archivePick" style="margin-bottom:14px">
+          <span class="tape mini"></span>
+          <div class="sec-head"><span class="icn-inline" v-html="app.icon('daisy')"></span><h3>旧稿重读</h3><span class="en">ARCHIVE</span></div>
+          <p class="archive-q" style="font-size:13px"><span class="qt">❝</span>{{ archivePick.body }}</p>
+          <div class="archive-meta"><span>《{{ archivePick.title }}》</span><span v-if="archivePick.tag"># {{ archivePick.tag }}</span><span>{{ archivePick.date }}</span></div>
+        </div>
+        <div class="pcard">
+          <span class="tape green"></span>
+          <div class="sec-head"><span class="icn-inline" v-html="app.icon('daisy')"></span><h3>灵感剪报夹</h3><span class="en">CLIPS</span>
+            <span class="tail"><span class="cnt">{{ filteredNotes.length }} 则</span><button class="add" @click="openEditor('notes')">＋</button></span>
+          </div>
+          <div class="tagrow" v-if="noteTags.length">
+            <button class="tchip" :class="{on:noteTag===''}" @click="noteTag=''">全部</button>
+            <button v-for="t in noteTags" :key="t" class="tchip" :class="{on:noteTag===t}" @click="noteTag=t"># {{ t }}</button>
+          </div>
+          <div v-if="!filteredNotes.length" class="empty"><span class="e">✂️</span>剪下这一刻的想法吧</div>
+          <NoteClip v-for="x in filteredNotes" :key="x.id" :x="x" />
+        </div>
+      </section>
+
+      <footer class="colophon" style="border-top-width:1px">花海生活报 · 随身版</footer>
+    </main>
+
+    <!-- ======== 抽屉 ======== -->
+    <div v-if="drawer">
+      <div class="m-drawer-mask" @click="drawer=false"></div>
+      <aside class="m-drawer">
+        <div class="who">
+          <span class="ava" v-html="app.icon('daisy')"></span>
+          <span><b>{{ cfg.profile.name }}</b><p>{{ cfg.profile.subtitle }}</p></span>
+        </div>
+        <div v-for="m in cfg.modules" :key="m.id" class="navi" :class="{on:screen===m.id}" @click="go(m.id)">
+          <span class="e" v-html="app.icon(m.icon)"></span>{{ m.name }}<span style="margin-left:auto;font-size:9.5px;color:var(--ink-faint);letter-spacing:.1em">{{ m.en }}</span>
+        </div>
+        <p style="font-size:10.5px;color:var(--ink-faint);margin-top:18px;line-height:1.7">本报数据仅保存在这台手机的浏览器里，清理浏览记录会丢失哦。</p>
+      </aside>
+    </div>
+
+    <!-- ======== 底栏 + 浮动加号 ======== -->
+    <nav class="m-tabbar">
+      <button v-for="id in cfg.tabbar" :key="id" class="tb" :class="{on:screen===id}" @click="go(id)">
+        <span class="e" v-html="app.icon(cfg.modules.find(m=>m.id===id).icon)"></span>
+        {{ cfg.modules.find(m=>m.id===id).name }}
+      </button>
+    </nav>
+    <button class="m-fab" @click="quickAdd">＋</button>
+
+    <EditorModal v-if="ed.show" :ed="ed" :fields="edFields" :mod="edMod"
+      @save="saveRecord" @close="ed.show=false" />
+    <ToastList />
+  </div>
+</template>

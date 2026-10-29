@@ -20,18 +20,36 @@
 
 ## 🚀 使用
 
-无需安装依赖、无需构建，任选其一：
+```bash
+npm install        # 安装依赖
+npm run dev        # 本地开发（Vite 热更新）
+npm run build      # 构建产物输出到 dist/
+npm run preview    # 本地预览构建产物
+```
 
-- **本地打开**：直接双击 `index.html`（桌面版）或 `mobile.html`（手机版）；
-- **本地服务**：`python -m http.server 8000`，然后访问 `http://localhost:8000`；
-- **托管部署**：任意静态托管（GitHub Pages、Qoder Site、Vercel 等），以仓库根目录为发布目录即可，构建命令留空。
+- **部署**：任意静态托管（GitHub Pages、Qoder Site、Vercel 等），发布 `dist/` 目录，构建命令 `npm run build`，输出目录 `dist`；
+- **数据**：全部保存在浏览器 `localStorage` 中，跨天自动重置打卡、保留连续记录。**清理浏览器数据会清空报纸存档，请留意。**
 
-所有数据保存在浏览器 `localStorage` 中，跨天自动重置打卡、保留连续记录。**清理浏览器数据会清空报纸存档，请留意。**
+## 🧱 技术栈与工程结构
 
-## 🧱 技术栈
+- [Vue 3](https://vuejs.org/)（`<script setup>` 单文件组件）+ [Vite](https://vitejs.dev/) 构建
+- 双入口：`index.html`（桌面版）/ `mobile.html`（随身版），共享同一套 store 与组件
+- 图标为手绘多彩 SVG（墨线勾边 + 橘黄/墨绿/奶黄手账配色），内置于 `src/config.js`
 
-- 原生 HTML / CSS / JavaScript + [Vue 3](https://vuejs.org/)（本地内置，无 CDN 依赖）
-- 零构建、零后端，全站仅静态文件
+```
+src/
+├── main-desktop.js / main-mobile.js   # 双入口
+├── AppDesktop.vue / AppMobile.vue     # 两个端的应用外壳
+├── store.js                           # 全局响应式状态 + 持久化
+├── config.js                          # 配置、字段、手绘图标库
+├── utils.js                           # 日期/工具函数
+└── components/
+    ├── EditorModal.vue                # 通用新增/编辑弹窗（含本地图章上传）
+    ├── BloomGrid.vue                  # 盖章处习惯网格
+    ├── GoalCard.vue                   # 长线连载目标卡（浇水养成花）
+    ├── NoteClip.vue                   # 灵感剪报卡
+    └── ToastList.vue                  # 轻提示
+```
 
 ## 📄 协议
 

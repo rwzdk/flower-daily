@@ -507,3 +507,11 @@ body::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;
 .m-body .flower-divider{height:64px;margin-left:-16px;margin-right:-16px}
 .m-sec{margin-bottom:22px}
 .m-body .pcard{padding:16px}
+
+/* 手机端操作按钮常显 */
+.m-body .todo .del{opacity:1}
+.m-body .bloom .del{display:grid}
+.m-body .goal .gdel{opacity:1}
+.m-body .clip h4 .del{opacity:1}
+.m-body .clip h4 .pin{opacity:1}
+.m-body .bill .del{opacity:1}
