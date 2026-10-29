@@ -2,6 +2,12 @@
 export const CONFIG = {
   profile: { name: "阿棠", avatar: "🌼", subtitle: "花海编辑部 · 主笔" },
   storageKey: "flower-daily-v1",
+  /* 后端 API 地址（Cloudflare Worker）：
+     开发时留空（vite 已代理到 127.0.0.1:8787）；
+     部署后改成你的 Worker 地址，如 "https://flower-daily-api.xxx.workers.dev"，
+     也可在浏览器控制台 localStorage.setItem("fd-api-base", "https://…") 临时覆盖 */
+  apiBase: "https://flower-daily-api.qixin-study.workers.dev",
+  github: "https://github.com/rwzdk/flower-daily",
   modules: [
     { id: "home",  type: "dashboard", icon: "home", name: "头版",     en: "FRONT PAGE", desc: "今日总览与导览" },
     { id: "todo",  type: "todo",      icon: "pin", name: "今日要务", en: "AGENDA",     desc: "当天计划，办完就划掉",

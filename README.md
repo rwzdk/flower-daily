@@ -4,7 +4,7 @@
 
 ![花海生活报首页](docs/preview.png)
 
-「花海生活报」是一个**纯本地存储**的单页应用：没有账号、没有服务器、没有构建步骤，打开就是一份每天"付印"的私人小报。适合想把日子过好的学生、上班族与自由职业者。
+「花海生活报」是一个手账风格的个人生活小报：QQ 邮箱注册登录，数据云端同步（换设备不丢），右上角可跳转 GitHub 仓库、进入对话室反馈交流。适合想把日子过好的学生、上班族与自由职业者。
 
 ## ✨ 五个版面
 
@@ -27,8 +27,8 @@ npm run build      # 构建产物输出到 dist/
 npm run preview    # 本地预览构建产物
 ```
 
-- **部署**：任意静态托管（GitHub Pages、Qoder Site、Vercel 等），发布 `dist/` 目录，构建命令 `npm run build`，输出目录 `dist`；
-- **数据**：全部保存在浏览器 `localStorage` 中，跨天自动重置打卡、保留连续记录。**清理浏览器数据会清空报纸存档，请留意。**
+- **部署**：任意静态托管（GitHub Pages、Qoder Site、Vercel 等），发布 `dist/` 目录，构建命令 `npm run build`，输出目录 `dist`；登录/同步/对话室由 [Cloudflare Worker + D1](cloudflare/api/DEPLOY.md) 提供，部署步骤见该文档；
+- **数据**：登录后同步保存在云端 D1（多设备共享，支持多设备冲突保护），管理员可在右上角「编辑部看板」查看全站用户增长、登录地点分布等图表。
 
 ## 🧱 技术栈与工程结构
 
@@ -45,11 +45,17 @@ src/
 ├── utils.js                           # 日期/工具函数
 └── components/
     ├── EditorModal.vue                # 通用新增/编辑弹窗（含本地图章上传）
+    ├── AuthGate.vue                   # 登录 / 注册 / 找回密码（QQ 邮箱验证码）
+    ├── ChatRoom.vue                   # 对话室（用户反馈交流）
+    ├── ProfileModal.vue               # 个人资料编辑（昵称/头像/签名）
+    ├── AdminBoard.vue                 # 编辑部看板（管理员统计图表）
     ├── BloomGrid.vue                  # 盖章处习惯网格
     ├── GoalCard.vue                   # 长线连载目标卡（浇水养成花）
     ├── NoteClip.vue                   # 灵感剪报卡
     └── ToastList.vue                  # 轻提示
 ```
+
+云端 API 代码在 [cloudflare/api/](cloudflare/api/)（Cloudflare Worker：邮箱验证码 SMTP、账号会话、数据同步、对话室、登录地点记录、管理统计）。
 
 ## 📄 协议
 

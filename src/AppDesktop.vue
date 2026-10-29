@@ -1,16 +1,38 @@
 <script setup>
+import { ref, onMounted } from "vue";
 import { useApp } from "./store";
+import { initApp } from "./store";
+import { auth, doLogout } from "./auth";
+import { CONFIG } from "./config";
 import EditorModal from "./components/EditorModal.vue";
 import ToastList from "./components/ToastList.vue";
 import BloomGrid from "./components/BloomGrid.vue";
 import GoalCard from "./components/GoalCard.vue";
 import NoteClip from "./components/NoteClip.vue";
+import AuthGate from "./components/AuthGate.vue";
+import ChatRoom from "./components/ChatRoom.vue";
+import ProfileModal from "./components/ProfileModal.vue";
+import AdminBoard from "./components/AdminBoard.vue";
+import Avatar from "./components/Avatar.vue";
 
 const app = useApp();
-const { screen, drawer, ed, noteTag, cfg, cnDate, issueNo, greeting, totalProgress,
+const { screen, drawer, ed, noteTag, cfg, profile, cnDate, issueNo, greeting, totalProgress,
   todoDone, todos, checkDone, checks, todayOut, goalAvg, notes, dailyQuote, monthOut,
   sortedTodos, bills, monthIn, catBars, goals, archivePick, filteredNotes, noteTags,
   edFields, edMod, go, openEditor, saveRecord, del, toggleTodo, fmt, catEmoji } = app;
+
+const booted = ref(false);
+onMounted(async () => { await initApp(); booted.value = true; });
+
+const chatOpen = ref(false);
+const profileOpen = ref(false);
+const adminOpen = ref(false);
+const menuOpen = ref(false);
+function logout() {
+  menuOpen.value = false;
+  doLogout();
+  location.reload();
+}
 </script>
 
 <template>
@@ -98,7 +120,34 @@ const { screen, drawer, ed, noteTag, cfg, cnDate, issueNo, greeting, totalProgre
       <path d="M55 34c1-8 4-14 8-18"/>
     </svg></span>
 
-    <div class="d-page">
+    <!-- 登录闸门：未登录时只显示订阅卡 -->
+    <div v-if="!booted" class="boot-loading">📰 正在翻开报纸…</div>
+    <AuthGate v-else-if="!auth.user" />
+
+    <div class="d-page" v-else>
+
+      <!-- ======== 右上角：GitHub / 对话室 / 用户菜单 ======== -->
+      <div class="top-actions" @click.outside="menuOpen = false">
+        <a class="ta-btn" :href="CONFIG.github" target="_blank" rel="noopener" title="GitHub 仓库">
+          <svg viewBox="0 0 16 16" width="17" height="17" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg>
+        </a>
+        <button class="ta-btn" title="对话室 · 反馈交流" @click="chatOpen = true">
+          <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-8.5 8.5 8.5 8.5 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 8.5-8.5c4.7 0 8.5 3.8 8.5 8.5Z"/></svg>
+        </button>
+        <button class="ta-btn ta-ava" title="账号" @click.stop="menuOpen = !menuOpen">
+          <Avatar :a="profile.avatar" :size="28" />
+        </button>
+        <div v-if="menuOpen" class="ta-menu" @click.stop>
+          <div class="ta-me">
+            <Avatar :a="profile.avatar" :size="38" />
+            <span><b>{{ profile.name }}</b><i>{{ auth.user?.email }}</i></span>
+          </div>
+          <button class="ta-item" @click="profileOpen = true; menuOpen = false">✎ 我的资料</button>
+          <button class="ta-item" @click="chatOpen = true; menuOpen = false">💬 对话室 · 意见反馈</button>
+          <button v-if="auth.user?.isAdmin" class="ta-item" @click="adminOpen = true; menuOpen = false">📊 编辑部看板</button>
+          <button class="ta-item danger" @click="logout">⏏ 退出登录</button>
+        </div>
+      </div>
 
       <!-- ======== 报头 ======== -->
       <header class="masthead">
@@ -112,7 +161,7 @@ const { screen, drawer, ed, noteTag, cfg, cnDate, issueNo, greeting, totalProgre
 
       <div class="dateline">
         <span>{{ cnDate }}</span>
-        <span>主笔：<b>{{ cfg.profile.name }}</b> <span class="icn-inline" v-html="app.icon('daisy')"></span> · 今日已付印 <b>{{ totalProgress }}%</b></span>
+        <span>主笔：<b>{{ profile.name }}</b> <span class="icn-inline" v-html="app.icon('daisy')"></span> · 今日已付印 <b>{{ totalProgress }}%</b></span>
       </div>
 
       <!-- ======== 版面导航 ======== -->
@@ -120,14 +169,14 @@ const { screen, drawer, ed, noteTag, cfg, cnDate, issueNo, greeting, totalProgre
         <button v-for="m in cfg.modules" :key="m.id" class="tb" :class="{on:screen===m.id}" @click="go(m.id)">
           <span class="e" v-html="app.icon(m.icon)"></span>{{ m.name }}
         </button>
-        <span class="tail">本报数据仅存于本机浏览器</span>
+        <span class="tail">数据已云端同步 ☁ 多设备共享</span>
       </nav>
 
       <!-- ======== 头版（首页） ======== -->
       <section v-show="screen==='home'">
         <div class="headline">
           <div class="kicker">TODAY'S HEADLINE · 今日头版</div>
-          <h2>{{ greeting }}，<em>{{ cfg.profile.name }}</em>！<br/>花田长势良好，今日进度 {{ totalProgress }}%。</h2>
+          <h2>{{ greeting }}，<em>{{ profile.name }}</em>！<br/>花田长势良好，今日进度 {{ totalProgress }}%。</h2>
           <p class="lede">本报讯：今日要务完成 {{ todoDone }}/{{ todos.length }}，盖章 {{ checkDone }}/{{ checks.length }} 枚，账房支出 ¥{{ fmt(todayOut) }}。编辑部一致认为——值得加印一朵小红花。</p>
           <div class="hstats">
             <div class="hstat"><div class="n">{{ todoDone }}/{{ todos.length }}</div><div class="t">今日要务</div></div>
@@ -160,7 +209,7 @@ const { screen, drawer, ed, noteTag, cfg, cnDate, issueNo, greeting, totalProgre
         <div class="values">
           <div class="v"><b>为谁而办</b>想把日子过好的普通人：学生、上班族、自由职业者——不需要复杂系统，只要一张每天付印的小报。</div>
           <div class="v"><b>解决什么</b>计划散在各处记不住、好习惯三天就断、钱花得糊里糊涂、长期目标遥遥无期、灵感一闪就丢。</div>
-          <div class="v"><b>本报怎么办</b>要事一栏勾掉、习惯盖章、收支入账、目标每天浇一次水、灵感随手剪贴——全在本地，无需注册。</div>
+          <div class="v"><b>本报怎么办</b>要事一栏勾掉、习惯盖章、收支入账、目标每天浇一次水、灵感随手剪贴——注册登录后云端同步，换设备不丢。</div>
         </div>
       </section>
 
@@ -316,9 +365,12 @@ const { screen, drawer, ed, noteTag, cfg, cnDate, issueNo, greeting, totalProgre
       <footer class="colophon">花海生活报 · 本期完 · 明日准时出版</footer>
     </div>
 
-    <!-- 编辑器 + toast -->
+    <!-- 编辑器 + 对话室 + 资料 + 看板 + toast -->
     <EditorModal v-if="ed.show" :ed="ed" :fields="edFields" :mod="edMod"
       @save="saveRecord" @close="ed.show=false" />
+    <ChatRoom v-if="chatOpen" @close="chatOpen = false" />
+    <ProfileModal v-if="profileOpen" @close="profileOpen = false" />
+    <AdminBoard v-if="adminOpen" @close="adminOpen = false" />
     <ToastList />
   </div>
 </template>

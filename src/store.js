@@ -4,6 +4,8 @@
 import { reactive, computed, watch, toRefs } from "vue";
 import { CONFIG, FIELDS, CAT_EMOJI, ICONS, CARD_FLOWERS } from "./config";
 import { todayStr, yesterdayStr, uid } from "./utils";
+import { auth, bootAuth, ping } from "./auth";
+import { api } from "./api";
 
 function seedData() {
   const data = {};
@@ -38,31 +40,103 @@ export const store = reactive({
   toasts: []
 });
 
-/* ---- 启动：读取本地存档 + 跨天重置打卡 ---- */
-(function bootstrap() {
+/* ---- 云端同步 ----
+   数据以 { data, checkinDay } 整体存 D1；本地不再持久化。
+   修改后 900ms 防抖推送；冲突（其他设备写过）时采用云端最新版。 */
+let rev = 0;
+let saveTimer = null;
+let syncing = false;
+
+export async function loadCloudState() {
+  if (!auth.user || syncing) return;
+  syncing = true;
   try {
-    const raw = localStorage.getItem(CONFIG.storageKey);
-    if (raw) {
-      const saved = JSON.parse(raw);
-      if (saved.data) store.data = saved.data;
-      if (saved.checkinDay) store.checkinDay = saved.checkinDay;
+    const r = await api("/api/state");
+    const saved = JSON.parse(r.state);
+    if (saved.data) store.data = saved.data;
+    if (saved.checkinDay) store.checkinDay = saved.checkinDay;
+    rev = Number(r.revision) || 1;
+  } catch (e) {
+    if (e.code === "no_state") {
+      // 新订户：优先迁移老版本本地数据，否则用种子数据
+      rev = 0;
+      let migrated = null;
+      try {
+        const raw = localStorage.getItem(CONFIG.storageKey);
+        if (raw) {
+          const saved = JSON.parse(raw);
+          if (saved.data) migrated = saved;
+        }
+      } catch { /* 老数据损坏则忽略 */ }
+      if (migrated) {
+        store.data = migrated.data;
+        if (migrated.checkinDay) store.checkinDay = migrated.checkinDay;
+        localStorage.removeItem(CONFIG.storageKey);
+        toast("已把本地旧数据搬进云端花园 🌸");
+      } else {
+        store.data = seedData();
+        store.checkinDay = todayStr();
+      }
+      pushState();
+    } else {
+      toast(e.message || "云端数据读取失败");
     }
-  } catch (e) { /* 数据损坏则用种子数据 */ }
-  // 跨天自动重置打卡（保留连续天数）
+  }
+  crossDayReset();
+  syncing = false;
+}
+
+async function pushState() {
+  if (!auth.user) return;
+  const payload = JSON.stringify({ data: store.data, checkinDay: store.checkinDay });
+  try {
+    const r = await api("/api/state", { method: "PUT", body: { state: payload, baseRevision: rev } });
+    rev = Number(r.revision) || rev + 1;
+  } catch (e) {
+    if (e.code === "conflict" && e.server) {
+      try {
+        const saved = JSON.parse(e.server.state);
+        rev = Number(e.server.revision) || rev;
+        store.data = saved.data;
+        store.checkinDay = saved.checkinDay;
+        toast("发现其他设备的修改，已采用云端最新版");
+      } catch { /* 冲突数据损坏则忽略 */ }
+    }
+  }
+}
+function schedulePush() {
+  if (!auth.user) return;
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(pushState, 900);
+}
+watch(() => store.data, schedulePush, { deep: true });
+watch(() => store.checkinDay, schedulePush);
+
+function crossDayReset() {
   if (store.checkinDay !== todayStr()) {
     (store.data.check || []).forEach(c => { c.done = false; });
     store.checkinDay = todayStr();
   }
-})();
-
-/* ---- 持久化 ---- */
-function persist() {
-  try {
-    localStorage.setItem(CONFIG.storageKey, JSON.stringify({ data: store.data, checkinDay: store.checkinDay }));
-  } catch (e) { /* 存储满则忽略 */ }
 }
-watch(() => store.data, persist, { deep: true });
-watch(() => store.checkinDay, persist);
+
+/* ---- 应用启动：认证 + 拉取云端数据 + 在线心跳 ---- */
+export async function initApp() {
+  await bootAuth();
+  if (auth.user) {
+    await loadCloudState();
+    setInterval(ping, 60_000);
+  }
+}
+
+/* ---- 当前订户资料（替代原写死的 CONFIG.profile） ---- */
+export const profile = computed(() => {
+  const u = auth.user;
+  return {
+    name: u ? (u.nickname || u.email.split("@")[0]) : "游客",
+    avatar: u ? (u.avatar || "🌼") : "🌼",
+    subtitle: u ? u.email : "未登录",
+  };
+});
 
 /* ---- 计算属性 ---- */
 export const today = computed(() => todayStr());
@@ -266,6 +340,7 @@ export function useApp() {
   return {
     ...toRefs(store),
     cfg: CONFIG,
+    profile,
     today, cnDate, issueNo, greeting, curMod, edFields, edMod,
     todos, todoDone, checks, checkDone, goals, notes, bills,
     monthBills, monthOut, monthIn, todayOut, catBars, goalAvg,

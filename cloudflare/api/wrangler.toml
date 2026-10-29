@@ -1,0 +1,21 @@
+name = "flower-daily-api"
+main = "worker.js"
+compatibility_date = "2026-10-01"
+
+# 管理员邮箱：该邮箱注册的账号自动成为管理员，可见编辑部看板（全站统计图表）。
+[vars]
+ADMIN_EMAIL = "235173498@qq.com"
+MAIL_SENDER_NAME = "花海生活报"
+
+# 运行 `npx wrangler d1 create flower-daily` 后，把输出的 database_id 填到这里。
+# 本地 `npx wrangler dev` 可使用占位值；远程部署前必须替换。
+[[d1_databases]]
+binding = "DB"
+database_name = "flower-daily"
+database_id = "83c9cd08-cfb9-4d15-abcd-d1e3c71bbdb8"
+migrations_dir = "migrations"
+
+# 机密配置（不要写进本文件，用 secret 配置）：
+#   npx wrangler secret put MAIL_USER     # QQ 邮箱地址，如 235173498@qq.com
+#   npx wrangler secret put MAIL_PASS     # QQ 邮箱 SMTP 授权码（不是 QQ 密码）
+# 本地开发则在 .dev.vars 里写同名键值。
