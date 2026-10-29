@@ -3,6 +3,13 @@
   "private": true,
   "version": "2.0.0",
   "type": "module",
+  "description": "花海生活报 · 手账风个人生活工作台（待办/习惯打卡/记账/长期目标/灵感剪报），Vue3 + Vite 单页应用，纯本地存储",
+  "keywords": ["vue3", "vite", "journal", "habit-tracker", "expense-tracker", "local-first"],
+  "license": "SEE LICENSE IN LICENSE",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rwzdk/flower-daily.git"
+  },
   "scripts": {
     "dev": "vite",
     "build": "vite build",
