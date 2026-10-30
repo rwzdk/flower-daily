@@ -22,7 +22,7 @@ async function requestCode() {
   if (countdown.value > 0) return;
   try {
     await sendCode(form.email.trim(), mode.value === "reset" ? "reset" : "register");
-    toast("验证码已寄出，请查收邮箱 📬");
+    toast("验证码已寄出，请查收邮箱");
     countdown.value = 60;
     timer = setInterval(() => {
       countdown.value -= 1;
@@ -55,7 +55,7 @@ async function submit() {
       return;
     }
     await loadCloudState();
-    toast(`欢迎回来，${form.nickname || "主笔"} 🌼`);
+    toast(`欢迎回来，${form.nickname || "主笔"}`);
   } catch (e) {
     toast(e.message);
   }

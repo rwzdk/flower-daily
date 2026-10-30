@@ -3,7 +3,7 @@
 import { ref, onMounted, onUnmounted, nextTick } from "vue";
 import { api } from "../api";
 import { auth } from "../auth";
-import { toast } from "../store";
+import { toast, icon } from "../store";
 import Avatar from "./Avatar.vue";
 
 const emit = defineEmits(["close"]);
@@ -76,7 +76,7 @@ onUnmounted(() => { clearInterval(pollTimer); clearInterval(cdTimer); });
           <span class="en">TEA ROOM</span>
           <button class="chat-x" @click="emit('close')">×</button>
         </div>
-        <p class="chat-sub">聊聊使用感受、丢点建议，编辑部都会看到 ✎</p>
+        <p class="chat-sub">聊聊使用感受、丢点建议，编辑部都会看到 <span class="icn-inline" v-html="icon('pencil')"></span></p>
 
         <div ref="listEl" class="chat-list">
           <div v-if="loading" class="chat-empty">正在泡茶…</div>
@@ -84,7 +84,7 @@ onUnmounted(() => { clearInterval(pollTimer); clearInterval(cdTimer); });
             {{ error }}<br /><button class="btn ghost" style="margin-top:10px" @click="load">再试一次</button>
           </div>
           <div v-else-if="!messages.length" class="chat-empty">
-            <span class="e">🫖</span>茶水间还没人说话，来当第一位吧
+            <span class="e" v-html="icon('tea')"></span>茶水间还没人说话，来当第一位吧
           </div>
           <div v-for="m in messages" :key="m.id" class="chat-msg" :class="{ mine: m.userId === auth.user?.id }">
             <Avatar :a="m.avatar" :size="30" />

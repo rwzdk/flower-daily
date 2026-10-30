@@ -2,7 +2,7 @@
 /* ---- 编辑部看板：管理员专用全站统计（手绘风 SVG 图表） ---- */
 import { ref, computed, onMounted } from "vue";
 import { api } from "../api";
-import { toast } from "../store";
+import { toast, icon } from "../store";
 
 const emit = defineEmits(["close"]);
 const data = ref(null);
@@ -121,7 +121,7 @@ const seriesPaths = computed(() => series.value.map(s => ({
             <div class="achart-head"><b>登录地点 Top 10</b></div>
             <div v-if="!data.locations.length" class="chat-empty">还没有登录记录</div>
             <div v-for="l in data.locations" :key="l.location" class="cbar">
-              <span class="lb">📍 {{ l.location }}</span>
+              <span class="lb"><span class="icn-inline" v-html="icon('place')"></span> {{ l.location }}</span>
               <span class="tr"><i :style="{ width: Math.max(4, l.count / locMax * 100) + '%' }"></i></span>
               <span class="vl">{{ l.count }}</span>
             </div>
@@ -133,7 +133,7 @@ const seriesPaths = computed(() => series.value.map(s => ({
             <div v-for="u in data.recentUsers" :key="u.email + u.createdAt" class="arow">
               <span class="an">{{ u.nickname }}</span>
               <span class="am">{{ u.email }}</span>
-              <span class="al">📍 {{ u.location }}</span>
+              <span class="al"><span class="icn-inline" v-html="icon('place')"></span> {{ u.location }}</span>
               <span class="at">{{ shortTime(u.createdAt) }} 登记</span>
             </div>
           </div>

@@ -18,7 +18,7 @@ const app = useApp();
 const { screen, drawer, ed, noteTag, cfg, profile, cnDate, issueNo, greeting, totalProgress,
   todoDone, todos, checkDone, checks, todayOut, goalAvg, notes, dailyQuote, monthOut,
   sortedTodos, bills, monthIn, catBars, goals, archivePick, filteredNotes, noteTags,
-  edFields, edMod, go, openEditor, saveRecord, del, toggleTodo, fmt, catEmoji, quickAdd } = app;
+  edFields, edMod, go, openEditor, saveRecord, del, toggleTodo, fmt, catIcon, quickAdd } = app;
 
 const booted = ref(false);
 onMounted(async () => { await initApp(); booted.value = true; });
@@ -56,7 +56,7 @@ function logout() {
     </header>
 
     <!-- 登录闸门 -->
-    <div v-if="!booted" class="boot-loading">📰 正在翻开报纸…</div>
+    <div v-if="!booted" class="boot-loading"><span class="icn-inline" v-html="app.icon('news')"></span> 正在翻开报纸…</div>
     <AuthGate v-else-if="!auth.user" />
 
     <main class="m-screen" v-else>
@@ -103,14 +103,14 @@ function logout() {
           <div class="sec-head"><span class="icn-inline" v-html="app.icon('daisy')"></span><h3>今日要务</h3><span class="en">AGENDA</span>
             <span class="tail"><span class="cnt">{{ todoDone }}/{{ todos.length }}</span><button class="add" @click="openEditor('todo')">＋</button></span>
           </div>
-          <div v-if="!todos.length" class="empty"><span class="e">📌</span>刊登一条今日要务吧</div>
+          <div v-if="!todos.length" class="empty"><span class="e" v-html="app.icon('pin')"></span>刊登一条今日要务吧</div>
           <div v-for="x in sortedTodos" :key="x.id" class="todo" :class="{done:x.done}">
             <i class="box" @click="toggleTodo(x)"></i>
             <span class="tx" @click="toggleTodo(x)">{{ x.text }}</span>
             <span class="chip" :class="x.level">{{ {high:'P0',mid:'P1',low:'P2'}[x.level] }}</span>
             <button class="del" @click="del('todo',x.id)">×</button>
           </div>
-          <div style="margin-top:10px"><span class="pencil">✎ 点事项即可划掉</span></div>
+          <div style="margin-top:10px"><span class="pencil"><span class="icn-inline" v-html="app.icon('pencil')"></span> 点事项即可划掉</span></div>
         </div>
       </section>
 
@@ -122,9 +122,9 @@ function logout() {
           <div class="sec-head" style="padding-right:60px"><span class="icn-inline" v-html="app.icon('daisy')"></span><h3>盖章处</h3><span class="en">STAMPS</span>
             <span class="tail"><span class="cnt">{{ checkDone }}/{{ checks.length }}</span><button class="add" @click="openEditor('checkin')">＋</button></span>
           </div>
-          <div v-if="!checks.length" class="empty"><span class="e">🌷</span>种下第一个习惯吧</div>
+          <div v-if="!checks.length" class="empty"><span class="e" v-html="app.icon('tulip')"></span>种下第一个习惯吧</div>
           <BloomGrid />
-          <div style="margin-top:10px"><span class="pencil">✎ 完成就盖戳，跨天自动翻新</span></div>
+          <div style="margin-top:10px"><span class="pencil"><span class="icn-inline" v-html="app.icon('pencil')"></span> 完成就盖戳，跨天自动翻新</span></div>
         </div>
       </section>
 
@@ -135,9 +135,9 @@ function logout() {
           <div class="sec-head"><span class="icn-inline" v-html="app.icon('daisy')"></span><h3>账房流水</h3><span class="en">LEDGER</span>
             <span class="tail"><button class="add" @click="openEditor('ledger')">＋ 记一笔</button></span>
           </div>
-          <div v-if="!bills.length" class="empty"><span class="e">🧾</span>账本空空，记一笔吧</div>
+          <div v-if="!bills.length" class="empty"><span class="e" v-html="app.icon('receipt')"></span>账本空空，记一笔吧</div>
           <div v-for="x in bills" :key="x.id" class="bill">
-            <span class="cat-ic">{{ catEmoji(x.cat) }}</span>
+            <span class="cat-ic" v-html="catIcon(x.cat)"></span>
             <span class="info"><span class="t">{{ x.note || x.cat }}</span><br/><span class="d">{{ x.cat }} · {{ x.date }}</span></span>
             <span class="amt" :class="x.kind==='income'?'in':'out'">{{ x.kind==='income'?'+':'−' }}{{ fmt(x.amount) }}</span>
             <button class="del" @click="del('money',x.id)">×</button>
@@ -147,9 +147,9 @@ function logout() {
         <div class="pcard" style="margin-top:16px">
           <span class="tape green"></span>
           <div class="sec-head"><span class="icn-inline" v-html="app.icon('daisy')"></span><h3>支出构成</h3><span class="en">CHART</span></div>
-          <div v-if="!catBars.length" class="empty"><span class="e">📊</span>本月暂无支出</div>
+          <div v-if="!catBars.length" class="empty"><span class="e" v-html="app.icon('chart')"></span>本月暂无支出</div>
           <div v-for="c in catBars" :key="c.cat" class="cbar">
-            <span class="lb">{{ catEmoji(c.cat) }} {{ c.cat }}</span>
+            <span class="lb"><span class="icn-inline" v-html="catIcon(c.cat)"></span> {{ c.cat }}</span>
             <span class="tr"><i :style="{width:c.pct+'%'}"></i></span>
             <span class="vl">¥{{ fmt(c.v) }}</span>
           </div>
@@ -163,7 +163,7 @@ function logout() {
           <div class="sec-head"><span class="icn-inline" v-html="app.icon('daisy')"></span><h3>长线连载</h3><span class="en">SERIALS</span>
             <span class="tail"><span class="cnt">{{ goalAvg }}%</span><button class="add" @click="openEditor('goal')">＋ 种一棵</button></span>
           </div>
-          <div v-if="!goals.length" class="empty"><span class="e">🌱</span>种一棵长期目标慢慢养</div>
+          <div v-if="!goals.length" class="empty"><span class="e" v-html="app.icon('sprout')"></span>种一棵长期目标慢慢养</div>
           <GoalCard v-for="g in goals" :key="g.id" :g="g" />
         </div>
       </section>
@@ -185,7 +185,7 @@ function logout() {
             <button class="tchip" :class="{on:noteTag===''}" @click="noteTag=''">全部</button>
             <button v-for="t in noteTags" :key="t" class="tchip" :class="{on:noteTag===t}" @click="noteTag=t"># {{ t }}</button>
           </div>
-          <div v-if="!filteredNotes.length" class="empty"><span class="e">✂️</span>剪下这一刻的想法吧</div>
+          <div v-if="!filteredNotes.length" class="empty"><span class="e" v-html="app.icon('scissors')"></span>剪下这一刻的想法吧</div>
           <NoteClip v-for="x in filteredNotes" :key="x.id" :x="x" />
         </div>
       </section>
@@ -201,10 +201,10 @@ function logout() {
           <Avatar :a="profile.avatar" :size="46" />
           <span><b>{{ profile.name }}</b><p>{{ profile.subtitle }}</p></span>
         </div>
-        <div class="navi" @click="profileOpen = true; drawer = false">✎ 我的资料</div>
-        <div class="navi" @click="chatOpen = true; drawer = false">💬 对话室 · 反馈</div>
-        <div v-if="auth.user?.isAdmin" class="navi" @click="adminOpen = true; drawer = false">📊 编辑部看板</div>
-        <div class="navi" @click="logout">⏏ 退出登录</div>
+        <div class="navi" @click="profileOpen = true; drawer = false"><span class="icn-inline" v-html="app.icon('pencil')"></span> 我的资料</div>
+        <div class="navi" @click="chatOpen = true; drawer = false"><span class="icn-inline" v-html="app.icon('chat')"></span> 对话室 · 反馈</div>
+        <div v-if="auth.user?.isAdmin" class="navi" @click="adminOpen = true; drawer = false"><span class="icn-inline" v-html="app.icon('chart')"></span> 编辑部看板</div>
+        <div class="navi" @click="logout"><span class="icn-inline" v-html="app.icon('exit')"></span> 退出登录</div>
         <div v-for="m in cfg.modules" :key="m.id" class="navi" :class="{on:screen===m.id}" @click="go(m.id)">
           <span class="e" v-html="app.icon(m.icon)"></span>{{ m.name }}<span style="margin-left:auto;font-size:9.5px;color:var(--ink-faint);letter-spacing:.1em">{{ m.en }}</span>
         </div>

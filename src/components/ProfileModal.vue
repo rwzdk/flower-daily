@@ -3,7 +3,8 @@
 import { reactive, ref } from "vue";
 import { saveProfile } from "../auth";
 import { auth } from "../auth";
-import { toast } from "../store";
+import { toast, icon } from "../store";
+import { AVATAR_ICONS } from "../config";
 import Avatar from "./Avatar.vue";
 
 const emit = defineEmits(["close"]);
@@ -49,7 +50,7 @@ async function save() {
   busy.value = false;
 }
 
-const EMOJIS = ["🌼", "🌷", "🌻", "🌿", "🍀", "🦋", "🐝", "☕", "📚", "✂️", "🌱", "🌸"];
+const AVATARS = AVATAR_ICONS;
 </script>
 
 <template>
@@ -59,13 +60,13 @@ const EMOJIS = ["🌼", "🌷", "🌻", "🌿", "🍀", "🦋", "🐝", "☕", "
       <div class="profile-top">
         <Avatar :a="form.avatar" :size="64" />
         <div class="profile-top-acts">
-          <label class="fp-btn">📁 上传头像<input type="file" accept="image/*" hidden @change="pickImg"></label>
+          <label class="fp-btn"><span class="icn-inline" v-html="icon('folder')"></span> 上传头像<input type="file" accept="image/*" hidden @change="pickImg"></label>
           <button class="fp-clear2" v-if="form.avatar" @click="form.avatar=''">移除图片</button>
         </div>
         <div class="profile-email">{{ auth.user?.email }}</div>
       </div>
       <div class="emoji-row">
-        <button v-for="e in EMOJIS" :key="e" class="emoji-pick" :class="{ on: form.avatar === e }" @click="form.avatar = e">{{ e }}</button>
+        <button v-for="e in AVATARS" :key="e" class="emoji-pick" :class="{ on: form.avatar === e }" @click="form.avatar = e" v-html="icon(e)"></button>
       </div>
       <div class="f-row"><label>笔名</label>
         <input v-model.trim="form.nickname" type="text" maxlength="24" placeholder="在这份报纸上怎么称呼你">
@@ -74,7 +75,7 @@ const EMOJIS = ["🌼", "🌷", "🌻", "🌿", "🍀", "🦋", "🐝", "☕", "
         <input v-model.trim="form.bio" type="text" maxlength="60" placeholder="一句话介绍自己（可选）">
       </div>
       <div class="f-row" v-if="auth.lastLogin"><label>上次登录</label>
-        <div class="login-loc">📍 {{ auth.lastLogin.location || "未知" }} · {{ (auth.lastLogin.created_at || "").slice(0, 16).replace("T", " ") }}</div>
+        <div class="login-loc"><span class="icn-inline" v-html="icon('place')"></span> {{ auth.lastLogin.location || "未知" }} · {{ (auth.lastLogin.created_at || "").slice(0, 16).replace("T", " ") }}</div>
       </div>
       <div class="f-acts">
         <button class="btn ghost" @click="emit('close')">再想想</button>

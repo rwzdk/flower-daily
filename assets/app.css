@@ -97,6 +97,7 @@ input,textarea,select{font-family:inherit;font-size:14px;color:var(--ink)}
   border:1.5px dashed var(--line-strong);border-radius:var(--r-card);background:var(--card-2);
 }
 .empty .e{font-size:26px;display:block;margin-bottom:6px}
+.empty .e .icn{width:30px;height:30px;margin:0 auto}
 
 /* ============ 报纸卡片（A骨架 × B贴纸装饰） ============ */
 .pcard{
@@ -156,8 +157,8 @@ input,textarea,select{font-family:inherit;font-size:14px;color:var(--ink)}
 .masthead .rule{display:flex;align-items:center;gap:12px;margin-top:13px}
 .masthead .rule i{flex:1;height:1px;background:var(--line-strong)}
 .masthead .rule b{font-size:11.5px;color:var(--orange-deep);letter-spacing:.18em;font-weight:700;white-space:nowrap}
-.masthead .bouquet{position:absolute;right:-8px;top:-14px;width:150px;transform:rotate(4deg);mix-blend-mode:multiply;pointer-events:none}
-.masthead .stamp-corner{position:absolute;left:8px;top:16px;width:58px;height:70px;border:2px dashed var(--orange);
+.masthead .bouquet{position:absolute;right:6px;top:34px;width:102px;transform:rotate(5deg);mix-blend-mode:multiply;pointer-events:none;opacity:.75}
+.masthead .stamp-corner{position:absolute;left:14px;top:48px;width:58px;height:70px;border:2px dashed var(--orange);
   border-radius:6px;transform:rotate(-7deg);display:grid;place-items:center;background:rgba(255,253,246,.75);
   box-shadow:0 2px 6px rgba(107,87,60,.12);font-size:26px}
 
@@ -241,6 +242,7 @@ input,textarea,select{font-family:inherit;font-size:14px;color:var(--ink)}
   border-radius:var(--r-tile);padding:13px 6px 11px;cursor:pointer;transition:transform .13s, background .2s;user-select:none}
 .bloom:hover{transform:translateY(-2px)}
 .bloom .e{font-size:23px}
+.bloom .e .icn{width:30px;height:30px;margin:0 auto}
 .bloom .stamp-img{width:30px;height:30px;object-fit:cover;border-radius:8px;border:1.5px solid var(--line-strong);vertical-align:middle}
 /* 编辑器本地图片选择 */
 .filepick{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
@@ -287,6 +289,7 @@ input,textarea,select{font-family:inherit;font-size:14px;color:var(--ink)}
 .goal{margin-bottom:16px}
 .goal .gt{display:flex;justify-content:space-between;align-items:baseline;font-size:13.5px;font-weight:700;margin-bottom:6px}
 .goal .gt .em{margin-right:7px}
+.goal .gt .em .icn{width:17px;height:17px;display:inline-block;vertical-align:-3px}
 .goal .gt span{font-family:var(--serif);color:var(--orange-deep);font-size:12px;font-weight:700}
 .goal .note{font-size:11px;color:var(--ink-faint);margin-top:5px}
 .vine{display:flex;align-items:center;gap:10px}
@@ -312,32 +315,58 @@ input,textarea,select{font-family:inherit;font-size:14px;color:var(--ink)}
 
 body::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;
   background-image:radial-gradient(rgba(107,87,60,.055) 1px, transparent 1.5px);background-size:22px 22px}
-/* 页面角落花丛 */
+/* 页面角落花丛（手绘 SVG，随角微摆） */
 .flower-corner{position:fixed;pointer-events:none;z-index:0;mix-blend-mode:multiply}
-.fc-tl{top:-6px;left:-26px;width:170px;transform:rotate(160deg);opacity:.4}
-.fc-br{bottom:-10px;right:-30px;width:230px;transform:rotate(-8deg);opacity:.45}
+.fc-tl{top:-18px;left:-30px;width:150px;transform-origin:12% 12%;animation:fcSwayTl 9s ease-in-out infinite;opacity:.8}
+.fc-br{bottom:-34px;right:-52px;width:190px;transform-origin:88% 88%;animation:fcSwayBr 11s ease-in-out infinite;opacity:.8}
+@keyframes fcSwayTl{0%,100%{transform:rotate(148deg)}50%{transform:rotate(155deg)}}
+@keyframes fcSwayBr{0%,100%{transform:rotate(-7deg)}50%{transform:rotate(-2deg)}}
 
-/* 背景手绘贴图（锚定在版面两侧页边留白带，左右交错排布） */
-.doodle{position:fixed;pointer-events:none;z-index:0;opacity:.5;mix-blend-mode:multiply}
-.doodle svg{display:block;width:100%;height:auto}
-/* 左侧页边（自上而下）：云 → 飘叶 → 雏菊 → 蜜蜂 → 爱心 → 郁金香 → 蜗牛 */
-.dd-cloud{top:168px;right:calc(50% + 596px);width:88px;color:#7a603a;opacity:.3;--r:0deg;animation:ddFloat 10s ease-in-out infinite}
-.dd-leaf{top:264px;right:calc(50% + 614px);width:32px;color:#5f8f52;opacity:.4;transform:rotate(24deg)}
-.dd-daisy{top:35%;right:calc(50% + 602px);width:54px;color:#8a6f4d;transform:rotate(-10deg)}
-.dd-bee{top:55%;right:calc(50% + 596px);width:50px;color:#8a6f4d;--r:-8deg;animation:ddBob 5.5s ease-in-out infinite}
-.dd-heart{top:74%;right:calc(50% + 598px);width:28px;color:#d17f18;transform:rotate(-8deg);opacity:.4}
-.dd-tulip{bottom:130px;right:calc(50% + 598px);width:50px;color:#5f8f52;transform:rotate(6deg)}
-.dd-snail{bottom:56px;right:calc(50% + 620px);width:52px;color:#8a6f4d;transform:rotate(2deg)}
-/* 右侧页边（自上而下）：太阳 → 蝴蝶 → 闪光 → 枝叶 → 蘑菇 → 草丛 */
-.dd-sun{top:52px;left:calc(50% + 600px);width:72px;color:#d17f18;opacity:.55;--r:8deg;animation:ddFloat 8s ease-in-out infinite}
-.dd-butterfly{top:215px;left:calc(50% + 612px);width:56px;color:#d17f18;--r:12deg;animation:ddBob 6.5s ease-in-out infinite reverse}
-.dd-sparkle{top:44%;left:calc(50% + 618px);width:44px;color:#d17f18;animation:ddTwinkle 3.4s ease-in-out infinite}
-.dd-sprig{top:63%;left:calc(50% + 606px);width:54px;color:#5f8f52;transform:rotate(-12deg)}
-.dd-mushroom{bottom:150px;left:calc(50% + 610px);width:44px;color:#d17f18;transform:rotate(-4deg)}
-.dd-grass{bottom:64px;left:calc(50% + 596px);width:58px;color:#5f8f52;opacity:.45}
+/* 背景手绘贴图（整屏自然散布：左右两侧纵深交错，大小不一、深浅不一） */
+.doodle{position:fixed;pointer-events:auto;z-index:0;opacity:.82;mix-blend-mode:multiply;transition:opacity .2s}
+.doodle svg{display:block;width:100%;height:auto;transform-origin:50% 50%}
+/* 悬停互动：普通贴图弹一下，蝴蝶/蜜蜂快速扇翅，太阳旋转，爱心心跳 */
+.doodle:hover{opacity:1;z-index:2}
+.doodle:hover svg{animation:ddPop .5s cubic-bezier(.34,1.56,.64,1) both}
+.dd-butterfly:hover svg,.dd-bee:hover svg{animation:ddFlutter .38s ease-in-out 4}
+.dd-sun:hover svg{animation:ddSpin 2.6s linear infinite}
+.dd-heart:hover svg{animation:ddBeat .7s ease-in-out 2}
+.dd-sparkle:hover svg,.dd-stars:hover svg{animation:ddSpin 1.6s ease-in-out}
+@keyframes ddPop{0%{transform:scale(1)}45%{transform:scale(1.28) rotate(-7deg)}100%{transform:scale(1.12) rotate(3deg)}}
+@keyframes ddFlutter{0%,100%{transform:scaleX(1)}50%{transform:scaleX(.7)}}
+@keyframes ddBeat{0%,100%{transform:scale(1)}30%{transform:scale(1.24)}60%{transform:scale(1.08)}}
+/* 左半屏 */
+.dd-cloud{top:124px;left:10.5%;width:92px;color:#8fa8bd;opacity:.65;--r:0deg;animation:ddFloat 10s ease-in-out infinite}
+.dd-berry{top:216px;left:15%;width:40px;opacity:.85;--r:-6deg;animation:ddSway 8.5s ease-in-out infinite}
+.dd-leaf{top:262px;left:12%;width:32px;color:#5f8f52;opacity:.7;--r:24deg;animation:ddSway 7s ease-in-out infinite}
+.dd-daisy{top:33%;left:4%;width:56px;color:#8a6f4d;animation:ddSpin 48s linear infinite}
+.dd-balloon{top:45%;left:9%;width:42px;opacity:.8;--r:-4deg;animation:ddDrift 8s ease-in-out infinite}
+.dd-bee{top:57%;left:3%;width:52px;color:#8a6f4d;--r:-8deg;animation:ddBob 5.5s ease-in-out infinite}
+.dd-flowerpot{top:67%;left:8%;width:46px;opacity:.8;--r:2deg;animation:ddSway 8s ease-in-out infinite}
+.dd-heart{top:77%;left:14%;width:28px;color:#d17f18;opacity:.7;--r:-8deg;animation:ddBob 6s ease-in-out infinite}
+.dd-acorn{bottom:150px;left:13%;width:32px;opacity:.8;--r:8deg;animation:ddBob 7s ease-in-out infinite}
+.dd-tulip{bottom:104px;left:2.5%;width:52px;color:#5f8f52;--r:6deg;animation:ddSway 6.5s ease-in-out infinite}
+.dd-snail{bottom:38px;left:9%;width:52px;color:#8a6f4d;animation:ddCrawl 18s ease-in-out infinite}
+.dd-ladybug{bottom:225px;left:5%;width:34px;opacity:.85;animation:ddCrawl 14s ease-in-out infinite}
+/* 右半屏 */
+.dd-sun{top:42px;right:5%;width:76px;color:#d17f18;opacity:.85;--r:8deg;animation:ddFloat 8s ease-in-out infinite}
+.dd-butterfly{top:196px;right:8%;width:58px;color:#d17f18;--r:12deg;animation:ddBob 6.5s ease-in-out infinite reverse}
+.dd-plane{top:20%;right:13%;width:50px;opacity:.8;--r:6deg;animation:ddDrift 9s ease-in-out infinite}
+.dd-rainbow{top:30%;right:3.5%;width:80px;opacity:.75;--r:0deg;animation:ddSway 9s ease-in-out infinite}
+.dd-kite{top:43%;right:10%;width:48px;opacity:.85;--r:10deg;animation:ddSway 7s ease-in-out infinite}
+.dd-sparkle{top:56%;right:4%;width:46px;color:#d17f18;animation:ddTwinkle 3.4s ease-in-out infinite}
+.dd-sprig{top:65%;right:5%;width:56px;color:#5f8f52;--r:-12deg;animation:ddSway 7.5s ease-in-out infinite}
+.dd-clover{top:73%;right:12.5%;width:36px;opacity:.8;--r:-6deg;animation:ddSway 6s ease-in-out infinite}
+.dd-stars{bottom:238px;right:15.5%;width:56px;animation:ddTwinkle 3s ease-in-out infinite}
+.dd-mushroom{bottom:150px;right:13.5%;width:46px;color:#d17f18;--r:-4deg;animation:ddSway 9s ease-in-out infinite}
+.dd-grass{bottom:56px;right:16.5%;width:60px;color:#5f8f52;opacity:.7;--r:0deg;animation:ddSway 5.5s ease-in-out infinite}
 @keyframes ddFloat{0%,100%{transform:rotate(var(--r,0deg)) translateY(0)}50%{transform:rotate(var(--r,0deg)) translateY(-9px)}}
 @keyframes ddBob{0%,100%{transform:rotate(var(--r,0deg)) translateY(0)}50%{transform:rotate(calc(var(--r,0deg) + 5deg)) translateY(-11px)}}
-@keyframes ddTwinkle{0%,100%{opacity:.28;transform:scale(.9) rotate(-6deg)}50%{opacity:.6;transform:scale(1.06) rotate(-6deg)}}
+@keyframes ddTwinkle{0%,100%{opacity:.5;transform:scale(.9) rotate(-6deg)}50%{opacity:.9;transform:scale(1.06) rotate(-6deg)}}
+@keyframes ddSway{0%,100%{transform:rotate(var(--r,0deg))}50%{transform:rotate(calc(var(--r,0deg) - 7deg))}}
+@keyframes ddDrift{0%,100%{transform:rotate(var(--r,0deg)) translate(0,0)}50%{transform:rotate(var(--r,0deg)) translate(6px,-14px)}}
+@keyframes ddCrawl{0%,100%{transform:translateX(0)}50%{transform:translateX(12px)}}
+@keyframes ddSpin{to{transform:rotate(360deg)}}
 @media (max-width:1300px){.doodle{display:none}}
 
 /* 每日一句 */
@@ -528,16 +557,28 @@ body::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;
 .ava-dot{display:inline-grid;place-items:center;border-radius:11px;background:var(--card-2);
   border:1.5px solid var(--line-strong);overflow:hidden;flex:none;line-height:1}
 .ava-dot img{width:100%;height:100%;object-fit:cover;display:block}
+.ava-dot .ava-icn{display:grid;place-items:center;width:100%;height:100%}
+.ava-dot .ava-icn .icn{width:62%;height:62%}
 
-/* ---- 桌面右上角操作区 ---- */
-.top-actions{position:absolute;top:14px;right:18px;z-index:30;display:flex;align-items:center;gap:8px}
-.ta-btn{width:34px;height:34px;border-radius:11px;display:grid;place-items:center;
+/* ---- 桌面右上角操作区：贴纸按钮组 ---- */
+.top-actions{position:absolute;top:16px;right:20px;z-index:30;display:flex;align-items:center;gap:11px}
+.ta-btn{position:relative;width:38px;height:38px;border-radius:12px;display:grid;place-items:center;
   background:var(--card);border:1.5px solid var(--line-strong);color:var(--ink-soft);
-  box-shadow:2px 2px 0 rgba(107,87,60,.12);transition:transform .12s, color .15s}
-.ta-btn:hover{transform:translateY(-1px);color:var(--green-deep)}
-.ta-menu{position:absolute;top:42px;right:0;width:230px;background:var(--card);
+  box-shadow:2px 3px 0 rgba(107,87,60,.14);transition:transform .16s, box-shadow .16s, color .15s}
+/* 每个按钮像被一小段胶带钉在报上 */
+.ta-btn::before{content:"";position:absolute;top:-7px;left:50%;width:24px;height:9px;
+  transform:translateX(-50%) rotate(-3deg);background:rgba(240,154,51,.42);
+  border-left:1.5px dashed rgba(255,255,255,.75);border-right:1.5px dashed rgba(255,255,255,.75);pointer-events:none}
+.ta-btn:nth-child(1){transform:rotate(-2.5deg)}
+.ta-btn:nth-child(1)::before{background:rgba(140,175,116,.5);transform:translateX(-50%) rotate(3deg)}
+.ta-btn:nth-child(2){transform:rotate(1.6deg)}
+.ta-btn:nth-child(3){transform:rotate(-1.8deg)}
+.ta-btn:hover{transform:translateY(-2px) rotate(0deg);color:var(--green-deep);box-shadow:3px 5px 0 rgba(107,87,60,.18)}
+.ta-btn .icn{width:20px;height:20px}
+.ta-menu{position:absolute;top:50px;right:0;width:230px;background:var(--card);
   border:1.5px solid var(--line-strong);border-radius:var(--r-card);box-shadow:var(--shadow-pop);
-  padding:8px;z-index:31}
+  padding:8px;z-index:31;transform-origin:top right;animation:taPop .18s ease}
+@keyframes taPop{from{transform:scale(.92);opacity:0}to{transform:none;opacity:1}}
 .ta-me{display:flex;gap:10px;align-items:center;padding:10px;border-bottom:1.5px dashed var(--line-strong);margin-bottom:6px}
 .ta-me b{display:block;font-family:var(--serif);color:var(--green-deep);font-size:14.5px}
 .ta-me i{font-style:normal;font-size:11px;color:var(--ink-faint)}
@@ -548,7 +589,9 @@ body::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;
 
 /* ---- 登录 / 注册卡 ---- */
 .auth-mask{position:fixed;inset:0;z-index:50;display:grid;place-items:center;padding:18px;
-  background:rgba(250,245,231,.72);backdrop-filter:blur(3px)}
+  background:radial-gradient(ellipse 58% 54% at 50% 50%,rgba(250,245,231,.52) 0%,rgba(250,245,231,.26) 55%,rgba(250,245,231,.06) 100%)}
+/* 登录页两侧贴图在浅色蒙层下容易发灰，单独提亮；卡片本身不透明，不受影响 */
+.d-wrap:has(.auth-mask) .doodle{opacity:.96;filter:saturate(1.12) contrast(1.03)}
 .auth-card{position:relative;width:400px;max-width:100%;background:var(--card);
   border:2px solid var(--line-strong);border-radius:var(--r-sheet);box-shadow:var(--shadow-pop);
   padding:26px 26px 18px;animation:authin .3s ease}
@@ -587,6 +630,7 @@ body::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;
 .emoji-pick{width:34px;height:34px;border-radius:10px;font-size:18px;display:grid;place-items:center;
   background:var(--card-2);border:1.5px solid var(--line-strong)}
 .emoji-pick.on{border-color:var(--green);background:var(--green-soft);box-shadow:0 0 0 2px var(--green-soft)}
+.emoji-pick .icn{width:22px;height:22px}
 .login-loc{font-size:12.5px;color:var(--ink-soft);background:var(--card-2);border:1.5px dashed var(--line-strong);
   border-radius:var(--r-tile);padding:9px 12px}
 

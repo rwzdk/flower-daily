@@ -1,4 +1,6 @@
 <script setup>
+import { icon } from "../store";
+import { STAMP_ICONS } from "../config";
 const props = defineProps(["ed", "fields", "mod"]);
 defineEmits(["save", "close"]);
 
@@ -38,9 +40,12 @@ function pickImg(e, k) {
           <option v-for="c in mod.categories||[]" :key="c" :value="c">{{ c }}</option>
         </select>
         <div v-else-if="f.t==='file'" class="filepick">
-          <label class="fp-btn">📁 从本地选择图片<input type="file" accept="image/*" hidden @change="pickImg($event, f.k)"></label>
+          <label class="fp-btn"><span class="icn-inline" v-html="icon('folder')"></span> 从本地选择图片<input type="file" accept="image/*" hidden @change="pickImg($event, f.k)"></label>
           <span v-if="ed.form[f.k]" class="fp-prev"><img :src="ed.form[f.k]" alt=""><button class="fp-clear" @click="ed.form[f.k]=''">×</button></span>
-          <span v-else class="fp-hint">{{ f.ph || '可选，未选则显示 emoji' }}</span>
+          <span v-else class="fp-hint">{{ f.ph || '可选，未选则使用上面挑的手绘图标' }}</span>
+        </div>
+        <div v-else-if="f.t==='icon'" class="emoji-row">
+          <button v-for="e in STAMP_ICONS" :key="e" class="emoji-pick" :class="{on:ed.form[f.k]===e}" @click="ed.form[f.k]=e" v-html="icon(e)"></button>
         </div>
         <div v-else-if="f.t==='seg'" class="seg">
           <button v-for="o in f.options" :key="o.v" class="op" :class="{on:ed.form[f.k]===o.v}" @click="ed.form[f.k]=o.v">{{ o.l }}</button>

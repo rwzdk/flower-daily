@@ -2,7 +2,7 @@
    花海生活报 · 全局响应式 Store（桌面版与手机版共用）
    ============================================================ */
 import { reactive, computed, watch, toRefs } from "vue";
-import { CONFIG, FIELDS, CAT_EMOJI, ICONS, CARD_FLOWERS } from "./config";
+import { CONFIG, FIELDS, CAT_ICON, EMOJI_ICON, ICONS, CARD_FLOWERS } from "./config";
 import { todayStr, yesterdayStr, uid } from "./utils";
 import { auth, bootAuth, ping } from "./auth";
 import { api } from "./api";
@@ -72,7 +72,7 @@ export async function loadCloudState() {
         store.data = migrated.data;
         if (migrated.checkinDay) store.checkinDay = migrated.checkinDay;
         localStorage.removeItem(CONFIG.storageKey);
-        toast("已把本地旧数据搬进云端花园 🌸");
+        toast("已把本地旧数据搬进云端花园");
       } else {
         store.data = seedData();
         store.checkinDay = todayStr();
@@ -133,7 +133,7 @@ export const profile = computed(() => {
   const u = auth.user;
   return {
     name: u ? (u.nickname || u.email.split("@")[0]) : "游客",
-    avatar: u ? (u.avatar || "🌼") : "🌼",
+    avatar: u ? (u.avatar || "daisy") : "daisy",
     subtitle: u ? u.email : "未登录",
   };
 });
@@ -217,7 +217,9 @@ export function toast(msg) {
   store.toasts.push(t);
   setTimeout(() => { store.toasts = store.toasts.filter(x => x.id !== t.id); }, 2200);
 }
-export function catEmoji(cat) { return CAT_EMOJI[cat] || "📦"; }
+export function catIcon(cat) { return icon(CAT_ICON[cat] || "box"); }
+/* 任意旧值（emoji / 图标名）→ 手绘 SVG */
+export function pic(v) { return icon(ICONS[v] ? v : (EMOJI_ICON[v] || "daisy")); }
 export function icon(name) {
   return `<svg class="icn" viewBox="0 0 24 24" fill="none" stroke="#6b573c" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">${ICONS[name] || ICONS.daisy}</svg>`;
 }
@@ -258,8 +260,8 @@ export function saveRecord() {
   } else {
     const it = Object.assign({ id: uid() }, form);
     if (type === "todo") it.done = false;
-    if (type === "checkin") { it.done = false; it.streak = 0; it.lastDone = ""; if (!it.emoji) it.emoji = "🌱"; }
-    if (type === "goal") { it.current = +it.current || 0; it.target = +it.target; if (!it.emoji) it.emoji = "🌱"; it.lastStep = ""; it.waterLog = []; }
+    if (type === "checkin") { it.done = false; it.streak = 0; it.lastDone = ""; if (!it.emoji) it.emoji = "sprout"; }
+    if (type === "goal") { it.current = +it.current || 0; it.target = +it.target; if (!it.emoji) it.emoji = "sprout"; it.lastStep = ""; it.waterLog = []; }
     if (type === "ledger") { it.amount = +it.amount; if (!it.date) it.date = today.value; }
     if (type === "notes") it.date = today.value;
     list.unshift(it);
@@ -278,7 +280,7 @@ export function toggleCheck(x) {
   if (!x.done) {
     x.streak = (x.lastDone === yesterdayStr()) ? (x.streak || 0) + 1 : 1;
     x.done = true; x.lastDone = today.value;
-    toast(`盖章成功！连续 ${x.streak} 天 🌸`);
+    toast(`盖章成功！连续 ${x.streak} 天`);
   } else {
     x.done = false; x.streak = Math.max(0, (x.streak || 1) - 1); x.lastDone = "";
   }
@@ -290,8 +292,8 @@ export function stepGoal(g) {
     if (!g.waterLog) g.waterLog = [];
     if (!g.waterLog.includes(today.value)) g.waterLog.push(today.value);
     g._w = true; setTimeout(() => { g._w = false; }, 950);
-    if (g.current >= g.target) toast("🎉 目标达成，加印喜报！");
-    else toast("浇水成功，藤蔓 +1 🌿");
+    if (g.current >= g.target) toast("目标达成，加印喜报！");
+    else toast("浇水成功，藤蔓 +1");
   }
 }
 export function goalStreak(g) {
@@ -345,7 +347,7 @@ export function useApp() {
     todos, todoDone, checks, checkDone, goals, notes, bills,
     monthBills, monthOut, monthIn, todayOut, catBars, goalAvg,
     sortedTodos, noteTags, filteredNotes, dailyQuote, last7, archivePick, totalProgress,
-    go, toast, catEmoji, icon, cardIcon, fmt, goalPct,
+    go, toast, catIcon, pic, icon, cardIcon, fmt, goalPct,
     openEditor, saveRecord, del, toggleTodo, toggleCheck,
     stepGoal, goalStreak, flowerSvg, pinNote, quickAdd
   };
